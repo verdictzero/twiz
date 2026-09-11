@@ -1,0 +1,442 @@
+{
+  "format": "kenney-touch-layout",
+  "version": 1,
+  "generator": "Touch Layout Studio",
+  "name": "Portrait RPG",
+  "exported": "2026-09-11T22:53:06.766Z",
+  "pack": {
+    "name": "Kenney Mobile Controls 1.0",
+    "license": "CC0 1.0 Universal",
+    "source": "https://kenney.nl/assets/mobile-controls"
+  },
+  "style": {
+    "id": "g",
+    "name": "Light Glass",
+    "dir": "style-g"
+  },
+  "highlightSet": {
+    "id": "a",
+    "name": "Amber",
+    "dir": "highlights-a"
+  },
+  "reference": {
+    "width": 393,
+    "height": 852,
+    "orientation": "portrait",
+    "device": "iPhone 15",
+    "deviceId": "iphone-15"
+  },
+  "safeArea": {
+    "top": 59,
+    "right": 0,
+    "bottom": 21,
+    "left": 0
+  },
+  "background": {
+    "mode": "gradient",
+    "color": "#1a1d24",
+    "color2": "#0c0e13",
+    "auto": true
+  },
+  "controls": [
+    {
+      "id": "move",
+      "label": "move",
+      "type": "joystick",
+      "kind": "Joystick",
+      "action": "move",
+      "anchor": "bottom-left",
+      "anchorOffset": {
+        "x": 110,
+        "y": -152
+      },
+      "center": {
+        "x": 110,
+        "y": 700
+      },
+      "rect": {
+        "x": 25,
+        "y": 615,
+        "width": 170,
+        "height": 170
+      },
+      "normalized": {
+        "x": 0.2799,
+        "y": 0.8216
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 97.75
+      },
+      "sprite": {
+        "sprite": "joystick_hexagon_pad_b",
+        "file": "assets/vector/style-g/joystick_hexagon_pad_b.svg",
+        "pressedSprite": "joystick_hexagon_pad_highlight",
+        "pressedFile": "assets/vector/highlights-a/joystick_hexagon_pad_highlight.svg"
+      },
+      "stick": {
+        "nub": {
+          "sprite": "joystick_hexagon_nub_b",
+          "file": "assets/vector/style-g/joystick_hexagon_nub_b.svg",
+          "pressedSprite": "joystick_hexagon_nub_highlight",
+          "pressedFile": "assets/vector/highlights-a/joystick_hexagon_nub_highlight.svg",
+          "width": 85,
+          "height": 85
+        },
+        "travelRadius": 37.4,
+        "travelRatio": 0.44,
+        "deadZone": 0.18,
+        "deadZoneRadius": 6.73,
+        "mode": "floating",
+        "highlight": "nub",
+        "recenter": true,
+        "invertY": false,
+        "axes": {
+          "x": "move_x",
+          "y": "move_y"
+        }
+      }
+    },
+    {
+      "id": "attack",
+      "label": "attack",
+      "type": "button",
+      "kind": "Button",
+      "action": "attack",
+      "anchor": "bottom-right",
+      "anchorOffset": {
+        "x": -93,
+        "y": -152
+      },
+      "center": {
+        "x": 300,
+        "y": 700
+      },
+      "rect": {
+        "x": 248,
+        "y": 642.62,
+        "width": 104,
+        "height": 114.76
+      },
+      "normalized": {
+        "x": 0.7634,
+        "y": 0.8216
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 119.6,
+        "height": 131.97
+      },
+      "sprite": {
+        "sprite": "button_hexagon",
+        "file": "assets/vector/style-g/button_hexagon.svg",
+        "pressedSprite": "button_hexagon_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_hexagon_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_sword",
+        "file": "assets/vector/icons/icon_sword.svg",
+        "width": 52,
+        "height": 52,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "skill_1",
+      "label": "skill_1",
+      "type": "button",
+      "kind": "Button",
+      "action": "skill_1",
+      "anchor": "bottom-center",
+      "anchorOffset": {
+        "x": 11.5,
+        "y": -222
+      },
+      "center": {
+        "x": 208,
+        "y": 630
+      },
+      "rect": {
+        "x": 168,
+        "y": 585.86,
+        "width": 80,
+        "height": 88.28
+      },
+      "normalized": {
+        "x": 0.5293,
+        "y": 0.7394
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 92,
+        "height": 101.52
+      },
+      "sprite": {
+        "sprite": "button_hexagon",
+        "file": "assets/vector/style-g/button_hexagon.svg",
+        "pressedSprite": "button_hexagon_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_hexagon_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_fire",
+        "file": "assets/vector/icons/icon_fire.svg",
+        "width": 40,
+        "height": 40,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "skill_2",
+      "label": "skill_2",
+      "type": "button",
+      "kind": "Button",
+      "action": "skill_2",
+      "anchor": "center",
+      "anchorOffset": {
+        "x": 63.5,
+        "y": 118
+      },
+      "center": {
+        "x": 260,
+        "y": 544
+      },
+      "rect": {
+        "x": 220,
+        "y": 499.86,
+        "width": 80,
+        "height": 88.28
+      },
+      "normalized": {
+        "x": 0.6616,
+        "y": 0.6385
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 92,
+        "height": 101.52
+      },
+      "sprite": {
+        "sprite": "button_hexagon",
+        "file": "assets/vector/style-g/button_hexagon.svg",
+        "pressedSprite": "button_hexagon_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_hexagon_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_star",
+        "file": "assets/vector/icons/icon_star.svg",
+        "width": 40,
+        "height": 40,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "potion",
+      "label": "potion",
+      "type": "button",
+      "kind": "Button",
+      "action": "potion",
+      "anchor": "center-right",
+      "anchorOffset": {
+        "x": -35,
+        "y": 132
+      },
+      "center": {
+        "x": 358,
+        "y": 558
+      },
+      "rect": {
+        "x": 322,
+        "y": 518.28,
+        "width": 72,
+        "height": 79.45
+      },
+      "normalized": {
+        "x": 0.9109,
+        "y": 0.6549
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 82.8,
+        "height": 91.37
+      },
+      "sprite": {
+        "sprite": "button_hexagon",
+        "file": "assets/vector/style-g/button_hexagon.svg",
+        "pressedSprite": "button_hexagon_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_hexagon_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_shield",
+        "file": "assets/vector/icons/icon_shield.svg",
+        "width": 36,
+        "height": 36,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "menu",
+      "label": "menu",
+      "type": "button",
+      "kind": "Button",
+      "action": "menu",
+      "anchor": "top-right",
+      "anchorOffset": {
+        "x": -63,
+        "y": 60
+      },
+      "center": {
+        "x": 330,
+        "y": 60
+      },
+      "rect": {
+        "x": 302,
+        "y": 32,
+        "width": 56,
+        "height": 56
+      },
+      "normalized": {
+        "x": 0.8397,
+        "y": 0.0704
+      },
+      "rotation": 0,
+      "opacity": 0.85,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 28
+      },
+      "sprite": {
+        "sprite": "button_square",
+        "file": "assets/vector/style-g/button_square.svg",
+        "pressedSprite": "button_square_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_square_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_menu",
+        "file": "assets/vector/icons/icon_menu.svg",
+        "width": 25.2,
+        "height": 25.2,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "bag",
+      "label": "bag",
+      "type": "button",
+      "kind": "Button",
+      "action": "bag",
+      "anchor": "top-right",
+      "anchorOffset": {
+        "x": -129,
+        "y": 60
+      },
+      "center": {
+        "x": 264,
+        "y": 60
+      },
+      "rect": {
+        "x": 236,
+        "y": 32,
+        "width": 56,
+        "height": 56
+      },
+      "normalized": {
+        "x": 0.6718,
+        "y": 0.0704
+      },
+      "rotation": 0,
+      "opacity": 0.85,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 28
+      },
+      "sprite": {
+        "sprite": "button_square",
+        "file": "assets/vector/style-g/button_square.svg",
+        "pressedSprite": "button_square_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_square_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_key",
+        "file": "assets/vector/icons/icon_key.svg",
+        "width": 25.2,
+        "height": 25.2,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    }
+  ],
+  "assets": {
+    "sprites": [
+      "assets/vector/style-g/joystick_hexagon_pad_b.svg",
+      "assets/vector/style-g/joystick_hexagon_nub_b.svg",
+      "assets/vector/style-g/button_hexagon.svg",
+      "assets/vector/style-g/button_square.svg"
+    ],
+    "pressed": [
+      "assets/vector/highlights-a/joystick_hexagon_pad_highlight.svg",
+      "assets/vector/highlights-a/joystick_hexagon_nub_highlight.svg",
+      "assets/vector/highlights-a/button_hexagon_highlight.svg",
+      "assets/vector/highlights-a/button_square_highlight.svg"
+    ],
+    "icons": [
+      "assets/vector/icons/icon_sword.svg",
+      "assets/vector/icons/icon_fire.svg",
+      "assets/vector/icons/icon_star.svg",
+      "assets/vector/icons/icon_shield.svg",
+      "assets/vector/icons/icon_menu.svg",
+      "assets/vector/icons/icon_key.svg"
+    ]
+  }
+}

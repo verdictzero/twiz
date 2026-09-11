@@ -1,0 +1,21 @@
+# GitLab Pages deploy.
+#
+# The site is plain HTML/CSS/ES modules with no build step, and it already
+# lives in `public/` — the directory GitLab Pages publishes — so this job only
+# has to hand that directory over as an artifact.
+
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  image: alpine:3.20
+  script:
+    - test -f public/index.html
+    - test -f public/assets/manifest.js
+    - echo "Publishing $(find public -type f | wc -l) files."
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

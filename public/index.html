@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Touch Layout Studio</title>
+<meta name="description" content="Design mobile touch control layouts with the Kenney Mobile Controls pack and export them as JSON, PNG or SVG.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='28' fill='%23202028'/><circle cx='32' cy='32' r='19' fill='%232c2c38'/><circle cx='40' cy='26' r='11' fill='%2359d9c0'/></svg>">
+<link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="btn icon panel-toggle" id="btn-panel-left" title="Sprite library" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zm0 6h18v2H3zm0 6h18v2H3z"/></svg>
+  </button>
+
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="28" fill="currentColor" opacity=".18"/>
+      <circle cx="32" cy="32" r="19" fill="currentColor" opacity=".28"/>
+      <circle cx="41" cy="25" r="11" fill="currentColor"/>
+    </svg>
+    <span class="brand-text">Touch&nbsp;Layout&nbsp;<b>Studio</b></span>
+  </div>
+
+  <div class="topbar-group">
+    <button class="btn" id="btn-new" title="New layout">New</button>
+    <div class="menu-wrap">
+      <button class="btn" id="btn-examples" aria-haspopup="true" aria-expanded="false">Examples <span class="caret"></span></button>
+      <div class="menu" id="menu-examples" hidden></div>
+    </div>
+    <button class="btn" id="btn-import" title="Import a layout JSON file">Import</button>
+    <input type="file" id="file-import" accept="application/json,.json" hidden>
+  </div>
+
+  <div class="topbar-group">
+    <label class="field compact">
+      <span>Style</span>
+      <select id="sel-style" title="Sprite style — swaps every control at once"></select>
+    </label>
+    <label class="field compact">
+      <span>Press</span>
+      <select id="sel-highlight" title="Highlight set used for the pressed state"></select>
+    </label>
+  </div>
+
+  <div class="topbar-group">
+    <label class="field compact">
+      <span>Device</span>
+      <select id="sel-device"></select>
+    </label>
+    <button class="btn icon" id="btn-orient" title="Swap orientation (portrait / landscape)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10v10H4z"/><path d="M16 5h4v14h-4z" opacity=".45"/></svg>
+    </button>
+  </div>
+
+  <div class="topbar-spacer"></div>
+
+  <div class="topbar-group">
+    <button class="btn icon" id="btn-undo" title="Undo (Ctrl+Z)" disabled>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7H14a6 6 0 010 12H9v-2.2h5a3.8 3.8 0 000-7.6H8v3L2.6 7.9 8 4z"/></svg>
+    </button>
+    <button class="btn icon" id="btn-redo" title="Redo (Ctrl+Shift+Z)" disabled>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 7H10a6 6 0 100 12h5v-2.2h-5a3.8 3.8 0 010-7.6h6v3l5.4-4.3L16 4z"/></svg>
+    </button>
+  </div>
+
+  <div class="topbar-group">
+    <button class="btn primary" id="btn-play" title="Try the layout with real touch input (P)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l12 7-12 7z"/></svg>
+      <span>Test</span>
+    </button>
+    <button class="btn icon panel-toggle" id="btn-panel-right" title="Properties" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h10v2H4zm0 6h16v2H4zm0 6h10v2H4z"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/></svg>
+    </button>
+    <div class="menu-wrap">
+      <button class="btn accent" id="btn-export" aria-haspopup="true" aria-expanded="false">Export <span class="caret"></span></button>
+      <div class="menu right" id="menu-export" hidden>
+        <button data-export="json"><b>Layout JSON</b><small>Full schema — positions, anchors, stick travel, hit areas</small></button>
+        <button data-export="clipboard"><b>Copy JSON</b><small>Straight to the clipboard</small></button>
+        <div class="menu-sep"></div>
+        <button data-export="png1"><b>PNG @1x</b><small>Reference resolution</small></button>
+        <button data-export="png2"><b>PNG @2x</b><small>Retina preview image</small></button>
+        <button data-export="png-transparent"><b>PNG @2x, transparent</b><small>Overlay-ready, no background</small></button>
+        <div class="menu-sep"></div>
+        <button data-export="svg"><b>SVG</b><small>Vector, one group per control</small></button>
+        <button data-export="bundle"><b>Bundle (.zip-less)</b><small>JSON + PNG + used sprite list</small></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="workspace">
+
+  <!-- ─────────────── palette ─────────────── -->
+  <aside class="panel panel-left" id="panel-left">
+    <div class="panel-head">
+      <div class="tabs" role="tablist">
+        <button class="tab is-active" data-lib="controls" role="tab">Controls</button>
+        <button class="tab" data-lib="icons" role="tab">Icons</button>
+      </div>
+    </div>
+    <div class="panel-search">
+      <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><path d="M10 2a8 8 0 105.3 14L21 21.7 22.4 20l-5.7-5.7A8 8 0 0010 2zm0 2.2a5.8 5.8 0 110 11.6 5.8 5.8 0 010-11.6z"/></svg>
+      <input type="search" id="palette-search" placeholder="Search sprites…" autocomplete="off">
+    </div>
+    <div class="panel-body" id="palette"></div>
+    <div class="panel-foot">
+      <p class="hint">Click to drop in the middle, or drag onto the screen.</p>
+    </div>
+  </aside>
+
+  <!-- ─────────────── stage ─────────────── -->
+  <section class="stage-wrap" id="stage-wrap">
+    <div class="stage-toolbar">
+      <div class="seg">
+        <button class="btn icon sm" id="btn-zoom-out" title="Zoom out">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z"/></svg>
+        </button>
+        <button class="btn sm zoom-label" id="btn-zoom-fit" title="Fit to window (0)">100%</button>
+        <button class="btn icon sm" id="btn-zoom-in" title="Zoom in">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>
+        </button>
+      </div>
+      <div class="seg">
+        <button class="btn icon sm toggle" id="btn-grid" title="Show grid (G)" aria-pressed="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v2H3zm0 8h18v2H3zm0 8h18v2H3zM3 3h2v18H3zm8 0h2v18h-2zm8 0h2v18h-2z"/></svg>
+        </button>
+        <button class="btn icon sm toggle" id="btn-snap" title="Snap to grid &amp; guides (S)" aria-pressed="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 5.6L20 10l-5.6 2.4L12 18l-2.4-5.6L4 10l5.6-2.4z"/></svg>
+        </button>
+        <button class="btn icon sm toggle" id="btn-safe" title="Show safe area (A)" aria-pressed="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 7h10v10H7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 2"/></svg>
+        </button>
+        <button class="btn icon sm toggle" id="btn-mirror-guide" title="Show centre line (C)" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 2h2v20h-2z"/><path d="M3 7h5v10H3zm13 0h5v10h-5z" opacity=".4"/></svg>
+        </button>
+      </div>
+      <div class="seg" id="seg-arrange">
+        <button class="btn icon sm" data-arrange="mirror" title="Mirror to the other side (M)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 2h2v20h-2z" opacity=".45"/><path d="M9 6L3 12l6 6zM15 6l6 6-6 6z"/></svg>
+        </button>
+        <button class="btn icon sm" data-arrange="align-h" title="Align centres horizontally">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 2h2v20h-2z" opacity=".45"/><path d="M5 6h14v4H5zm3 8h8v4H8z"/></svg>
+        </button>
+        <button class="btn icon sm" data-arrange="align-v" title="Align centres vertically">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 11h20v2H2z" opacity=".45"/><path d="M6 5h4v14H6zm8 3h4v8h-4z"/></svg>
+        </button>
+        <button class="btn icon sm" data-arrange="front" title="Bring to front (])">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h12v12H3z" opacity=".4"/><path d="M9 9h12v12H9z"/></svg>
+        </button>
+        <button class="btn icon sm" data-arrange="back" title="Send to back ([)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9h12v12H9z" opacity=".4"/><path d="M3 3h12v12H3z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="stage-viewport" id="viewport">
+      <canvas id="stage"></canvas>
+      <div class="stage-empty" id="stage-empty" hidden>
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/><circle cx="32" cy="32" r="10" fill="currentColor" opacity=".3"/></svg>
+        <p><b>Empty screen.</b> Pick a control on the left to get started,<br>or load one of the example layouts.</p>
+      </div>
+    </div>
+
+    <div class="playbar" id="playbar" hidden>
+      <span class="playbar-title">Test mode</span>
+      <div class="readout" id="readout"></div>
+      <button class="btn sm" id="btn-play-exit">Exit (Esc)</button>
+    </div>
+    <div class="statusbar" id="statusbar"></div>
+  </section>
+
+  <!-- ─────────────── inspector ─────────────── -->
+  <aside class="panel panel-right" id="panel-right">
+    <div class="panel-head">
+      <div class="tabs" role="tablist">
+        <button class="tab is-active" data-insp="props" role="tab">Properties</button>
+        <button class="tab" data-insp="layers" role="tab">Layers</button>
+        <button class="tab" data-insp="screen" role="tab">Screen</button>
+      </div>
+    </div>
+    <div class="panel-body" id="inspector"></div>
+  </aside>
+</main>
+
+<div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+<dialog class="dlg" id="dlg-json">
+  <form method="dialog" class="dlg-inner">
+    <header><h2 id="dlg-json-title">Layout JSON</h2></header>
+    <textarea id="dlg-json-text" spellcheck="false" readonly></textarea>
+    <footer>
+      <button class="btn" value="close">Close</button>
+      <button class="btn accent" id="dlg-json-copy" type="button">Copy</button>
+      <button class="btn primary" id="dlg-json-download" type="button">Download .json</button>
+    </footer>
+  </form>
+</dialog>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

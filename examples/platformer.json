@@ -1,0 +1,332 @@
+{
+  "format": "kenney-touch-layout",
+  "version": 1,
+  "generator": "Touch Layout Studio",
+  "name": "Platformer",
+  "exported": "2026-09-11T22:53:06.436Z",
+  "pack": {
+    "name": "Kenney Mobile Controls 1.0",
+    "license": "CC0 1.0 Universal",
+    "source": "https://kenney.nl/assets/mobile-controls"
+  },
+  "style": {
+    "id": "a",
+    "name": "Dark Gloss",
+    "dir": "style-a"
+  },
+  "highlightSet": {
+    "id": "a",
+    "name": "Amber",
+    "dir": "highlights-a"
+  },
+  "reference": {
+    "width": 852,
+    "height": 393,
+    "orientation": "landscape",
+    "device": "iPhone 15",
+    "deviceId": "iphone-15"
+  },
+  "safeArea": {
+    "top": 0,
+    "right": 59,
+    "bottom": 21,
+    "left": 59
+  },
+  "background": {
+    "mode": "gradient",
+    "color": "#6b7487",
+    "color2": "#39404f",
+    "auto": true
+  },
+  "controls": [
+    {
+      "id": "move",
+      "label": "move",
+      "type": "joystick",
+      "kind": "Joystick",
+      "action": "move",
+      "anchor": "bottom-left",
+      "anchorOffset": {
+        "x": 150,
+        "y": -93
+      },
+      "center": {
+        "x": 150,
+        "y": 300
+      },
+      "rect": {
+        "x": 66,
+        "y": 216,
+        "width": 168,
+        "height": 168
+      },
+      "normalized": {
+        "x": 0.1761,
+        "y": 0.7634
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 96.6
+      },
+      "sprite": {
+        "sprite": "joystick_circle_pad_a",
+        "file": "assets/vector/style-a/joystick_circle_pad_a.svg",
+        "pressedSprite": "joystick_circle_pad_highlight",
+        "pressedFile": "assets/vector/highlights-a/joystick_circle_pad_highlight.svg"
+      },
+      "stick": {
+        "nub": {
+          "sprite": "joystick_circle_nub_a",
+          "file": "assets/vector/style-a/joystick_circle_nub_a.svg",
+          "pressedSprite": "joystick_circle_nub_highlight",
+          "pressedFile": "assets/vector/highlights-a/joystick_circle_nub_highlight.svg",
+          "width": 84,
+          "height": 84
+        },
+        "travelRadius": 35.28,
+        "travelRatio": 0.42,
+        "deadZone": 0.18,
+        "deadZoneRadius": 6.35,
+        "mode": "fixed",
+        "highlight": "nub",
+        "recenter": true,
+        "invertY": false,
+        "axes": {
+          "x": "move_x",
+          "y": "move_y"
+        }
+      }
+    },
+    {
+      "id": "jump",
+      "label": "jump",
+      "type": "button",
+      "kind": "Button",
+      "action": "jump",
+      "anchor": "bottom-right",
+      "anchorOffset": {
+        "x": -92,
+        "y": -73
+      },
+      "center": {
+        "x": 760,
+        "y": 320
+      },
+      "rect": {
+        "x": 708,
+        "y": 268,
+        "width": 104,
+        "height": 104
+      },
+      "normalized": {
+        "x": 0.892,
+        "y": 0.8142
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 62.4
+      },
+      "sprite": {
+        "sprite": "button_circle",
+        "file": "assets/vector/style-a/button_circle.svg",
+        "pressedSprite": "button_circle_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_jump",
+        "file": "assets/vector/icons/icon_jump.svg",
+        "width": 52,
+        "height": 52,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "attack",
+      "label": "attack",
+      "type": "button",
+      "kind": "Button",
+      "action": "attack",
+      "anchor": "center-right",
+      "anchorOffset": {
+        "x": -202,
+        "y": 53.5
+      },
+      "center": {
+        "x": 650,
+        "y": 250
+      },
+      "rect": {
+        "x": 604,
+        "y": 204,
+        "width": 92,
+        "height": 92
+      },
+      "normalized": {
+        "x": 0.7629,
+        "y": 0.6361
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 55.2
+      },
+      "sprite": {
+        "sprite": "button_circle",
+        "file": "assets/vector/style-a/button_circle.svg",
+        "pressedSprite": "button_circle_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_sword",
+        "file": "assets/vector/icons/icon_sword.svg",
+        "width": 46,
+        "height": 46,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "dash",
+      "label": "dash",
+      "type": "button",
+      "kind": "Button",
+      "action": "dash",
+      "anchor": "center-right",
+      "anchorOffset": {
+        "x": -100,
+        "y": -0.5
+      },
+      "center": {
+        "x": 752,
+        "y": 196
+      },
+      "rect": {
+        "x": 714,
+        "y": 158,
+        "width": 76,
+        "height": 76
+      },
+      "normalized": {
+        "x": 0.8826,
+        "y": 0.4987
+      },
+      "rotation": 0,
+      "opacity": 0.92,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 45.6
+      },
+      "sprite": {
+        "sprite": "button_circle",
+        "file": "assets/vector/style-a/button_circle.svg",
+        "pressedSprite": "button_circle_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_arrow",
+        "file": "assets/vector/icons/icon_arrow.svg",
+        "width": 38,
+        "height": 38,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "pause",
+      "label": "pause",
+      "type": "button",
+      "kind": "Button",
+      "action": "pause",
+      "anchor": "top-right",
+      "anchorOffset": {
+        "x": -52,
+        "y": 46
+      },
+      "center": {
+        "x": 800,
+        "y": 46
+      },
+      "rect": {
+        "x": 772,
+        "y": 18,
+        "width": 56,
+        "height": 56
+      },
+      "normalized": {
+        "x": 0.939,
+        "y": 0.117
+      },
+      "rotation": 0,
+      "opacity": 0.8,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 28
+      },
+      "sprite": {
+        "sprite": "button_square",
+        "file": "assets/vector/style-a/button_square.svg",
+        "pressedSprite": "button_square_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_square_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_pause",
+        "file": "assets/vector/icons/icon_pause.svg",
+        "width": 25.2,
+        "height": 25.2,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    }
+  ],
+  "assets": {
+    "sprites": [
+      "assets/vector/style-a/joystick_circle_pad_a.svg",
+      "assets/vector/style-a/joystick_circle_nub_a.svg",
+      "assets/vector/style-a/button_circle.svg",
+      "assets/vector/style-a/button_square.svg"
+    ],
+    "pressed": [
+      "assets/vector/highlights-a/joystick_circle_pad_highlight.svg",
+      "assets/vector/highlights-a/joystick_circle_nub_highlight.svg",
+      "assets/vector/highlights-a/button_circle_highlight.svg",
+      "assets/vector/highlights-a/button_square_highlight.svg"
+    ],
+    "icons": [
+      "assets/vector/icons/icon_jump.svg",
+      "assets/vector/icons/icon_sword.svg",
+      "assets/vector/icons/icon_arrow.svg",
+      "assets/vector/icons/icon_pause.svg"
+    ]
+  }
+}

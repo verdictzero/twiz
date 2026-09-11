@@ -1,0 +1,395 @@
+{
+  "format": "kenney-touch-layout",
+  "version": 1,
+  "generator": "Touch Layout Studio",
+  "name": "Twin-stick shooter",
+  "exported": "2026-09-11T22:53:06.494Z",
+  "pack": {
+    "name": "Kenney Mobile Controls 1.0",
+    "license": "CC0 1.0 Universal",
+    "source": "https://kenney.nl/assets/mobile-controls"
+  },
+  "style": {
+    "id": "h",
+    "name": "Dark Glass",
+    "dir": "style-h"
+  },
+  "highlightSet": {
+    "id": "a",
+    "name": "Amber",
+    "dir": "highlights-a"
+  },
+  "reference": {
+    "width": 1194,
+    "height": 834,
+    "orientation": "landscape",
+    "device": "iPad Pro 11\"",
+    "deviceId": "ipad-11"
+  },
+  "safeArea": {
+    "top": 0,
+    "right": 0,
+    "bottom": 20,
+    "left": 0
+  },
+  "background": {
+    "mode": "gradient",
+    "color": "#6b7487",
+    "color2": "#39404f",
+    "auto": true
+  },
+  "controls": [
+    {
+      "id": "move",
+      "label": "move",
+      "type": "joystick",
+      "kind": "Joystick",
+      "action": "move",
+      "anchor": "bottom-left",
+      "anchorOffset": {
+        "x": 200,
+        "y": -214
+      },
+      "center": {
+        "x": 200,
+        "y": 620
+      },
+      "rect": {
+        "x": 100,
+        "y": 520,
+        "width": 200,
+        "height": 200
+      },
+      "normalized": {
+        "x": 0.1675,
+        "y": 0.7434
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 110
+      },
+      "sprite": {
+        "sprite": "joystick_polygon_pad_a",
+        "file": "assets/vector/style-h/joystick_polygon_pad_a.svg",
+        "pressedSprite": "joystick_polygon_pad_highlight",
+        "pressedFile": "assets/vector/highlights-a/joystick_polygon_pad_highlight.svg"
+      },
+      "stick": {
+        "nub": {
+          "sprite": "joystick_polygon_nub_a",
+          "file": "assets/vector/style-h/joystick_polygon_nub_a.svg",
+          "pressedSprite": "joystick_polygon_nub_highlight",
+          "pressedFile": "assets/vector/highlights-a/joystick_polygon_nub_highlight.svg",
+          "width": 100,
+          "height": 100
+        },
+        "travelRadius": 45,
+        "travelRatio": 0.45,
+        "deadZone": 0.2,
+        "deadZoneRadius": 9,
+        "mode": "fixed",
+        "highlight": "nub",
+        "recenter": true,
+        "invertY": false,
+        "axes": {
+          "x": "move_x",
+          "y": "move_y"
+        }
+      }
+    },
+    {
+      "id": "aim",
+      "label": "aim",
+      "type": "joystick",
+      "kind": "Joystick",
+      "action": "aim",
+      "anchor": "bottom-right",
+      "anchorOffset": {
+        "x": -200,
+        "y": -214
+      },
+      "center": {
+        "x": 994,
+        "y": 620
+      },
+      "rect": {
+        "x": 894,
+        "y": 520,
+        "width": 200,
+        "height": 200
+      },
+      "normalized": {
+        "x": 0.8325,
+        "y": 0.7434
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 110
+      },
+      "sprite": {
+        "sprite": "joystick_polygon_pad_a",
+        "file": "assets/vector/style-h/joystick_polygon_pad_a.svg",
+        "pressedSprite": "joystick_polygon_pad_highlight",
+        "pressedFile": "assets/vector/highlights-a/joystick_polygon_pad_highlight.svg"
+      },
+      "stick": {
+        "nub": {
+          "sprite": "joystick_polygon_nub_a",
+          "file": "assets/vector/style-h/joystick_polygon_nub_a.svg",
+          "pressedSprite": "joystick_polygon_nub_highlight",
+          "pressedFile": "assets/vector/highlights-a/joystick_polygon_nub_highlight.svg",
+          "width": 100,
+          "height": 100
+        },
+        "travelRadius": 45,
+        "travelRatio": 0.45,
+        "deadZone": 0.25,
+        "deadZoneRadius": 11.25,
+        "mode": "floating",
+        "highlight": "nub",
+        "recenter": true,
+        "invertY": false,
+        "axes": {
+          "x": "aim_x",
+          "y": "aim_y"
+        }
+      }
+    },
+    {
+      "id": "shoulder_left",
+      "label": "shoulder_left",
+      "type": "button",
+      "kind": "Button",
+      "action": "grenade",
+      "anchor": "top-left",
+      "anchorOffset": {
+        "x": 130,
+        "y": 70
+      },
+      "center": {
+        "x": 130,
+        "y": 70
+      },
+      "rect": {
+        "x": 64,
+        "y": 37,
+        "width": 132,
+        "height": 66
+      },
+      "normalized": {
+        "x": 0.1089,
+        "y": 0.0839
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 132,
+        "height": 66
+      },
+      "sprite": {
+        "sprite": "button_circle_wide",
+        "file": "assets/vector/style-h/button_circle_wide.svg",
+        "pressedSprite": "button_circle_wide_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_wide_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_button_l",
+        "file": "assets/vector/icons/icon_button_l.svg",
+        "width": 26.4,
+        "height": 26.4,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "shoulder_right",
+      "label": "shoulder_right",
+      "type": "button",
+      "kind": "Button",
+      "action": "reload",
+      "anchor": "top-right",
+      "anchorOffset": {
+        "x": -130,
+        "y": 70
+      },
+      "center": {
+        "x": 1064,
+        "y": 70
+      },
+      "rect": {
+        "x": 998,
+        "y": 37,
+        "width": 132,
+        "height": 66
+      },
+      "normalized": {
+        "x": 0.8911,
+        "y": 0.0839
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 132,
+        "height": 66
+      },
+      "sprite": {
+        "sprite": "button_circle_wide",
+        "file": "assets/vector/style-h/button_circle_wide.svg",
+        "pressedSprite": "button_circle_wide_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_wide_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_button_r",
+        "file": "assets/vector/icons/icon_button_r.svg",
+        "width": 26.4,
+        "height": 26.4,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "fire",
+      "label": "fire",
+      "type": "button",
+      "kind": "Button",
+      "action": "fire",
+      "anchor": "center-right",
+      "anchorOffset": {
+        "x": -200,
+        "y": -17
+      },
+      "center": {
+        "x": 994,
+        "y": 400
+      },
+      "rect": {
+        "x": 946,
+        "y": 352,
+        "width": 96,
+        "height": 96
+      },
+      "normalized": {
+        "x": 0.8325,
+        "y": 0.4796
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 60
+      },
+      "sprite": {
+        "sprite": "button_circle",
+        "file": "assets/vector/style-h/button_circle.svg",
+        "pressedSprite": "button_circle_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_burst",
+        "file": "assets/vector/icons/icon_burst.svg",
+        "width": 48,
+        "height": 48,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "shield",
+      "label": "shield",
+      "type": "button",
+      "kind": "Button",
+      "action": "shield",
+      "anchor": "center-left",
+      "anchorOffset": {
+        "x": 200,
+        "y": -17
+      },
+      "center": {
+        "x": 200,
+        "y": 400
+      },
+      "rect": {
+        "x": 158,
+        "y": 358,
+        "width": 84,
+        "height": 84
+      },
+      "normalized": {
+        "x": 0.1675,
+        "y": 0.4796
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 50.4
+      },
+      "sprite": {
+        "sprite": "button_circle",
+        "file": "assets/vector/style-h/button_circle.svg",
+        "pressedSprite": "button_circle_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_shield",
+        "file": "assets/vector/icons/icon_shield.svg",
+        "width": 42,
+        "height": 42,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    }
+  ],
+  "assets": {
+    "sprites": [
+      "assets/vector/style-h/joystick_polygon_pad_a.svg",
+      "assets/vector/style-h/joystick_polygon_nub_a.svg",
+      "assets/vector/style-h/button_circle_wide.svg",
+      "assets/vector/style-h/button_circle.svg"
+    ],
+    "pressed": [
+      "assets/vector/highlights-a/joystick_polygon_pad_highlight.svg",
+      "assets/vector/highlights-a/joystick_polygon_nub_highlight.svg",
+      "assets/vector/highlights-a/button_circle_wide_highlight.svg",
+      "assets/vector/highlights-a/button_circle_highlight.svg"
+    ],
+    "icons": [
+      "assets/vector/icons/icon_button_l.svg",
+      "assets/vector/icons/icon_button_r.svg",
+      "assets/vector/icons/icon_burst.svg",
+      "assets/vector/icons/icon_shield.svg"
+    ]
+  }
+}

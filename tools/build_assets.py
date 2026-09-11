@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""Import the Kenney "Mobile Controls" vector pack into public/assets.
+
+Copies every SVG into a flat, web-friendly folder structure and generates
+`public/assets/manifest.js` describing each sprite (size, group, variant and
+matching pressed-state highlight).
+
+Usage:  python3 tools/build_assets.py <path-to-unzipped-pack>
+"""
+import json
+import re
+import shutil
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "public" / "assets"
+
+STYLES = [
+    ("a", "Dark Gloss", "Gradient shaded, dark", "#2c2c37", True),
+    ("b", "Light Gloss", "Gradient shaded, light", "#e5eef0", False),
+    ("c", "White Solid", "Flat silhouette, white", "#ffffff", False),
+    ("d", "Black Solid", "Flat silhouette, black", "#111114", True),
+    ("e", "Dark Flat", "Layered flat, dark", "#222229", True),
+    ("f", "Light Flat", "Layered flat, light", "#dce2e4", False),
+    ("g", "Light Glass", "Translucent, light", "#878798", False),
+    ("h", "Dark Glass", "Translucent, dark", "#000000", True),
+]
+
+HIGHLIGHT_SETS = [
+    ("a", "Amber", "#ffbb33"),
+    ("b", "Violet", "#8a5ef0"),
+]
+
+SIZE_RE = re.compile(r'width="([0-9.]+)"\s+height="([0-9.]+)"')
+
+# Sprites whose highlight file breaks the `<name>_highlight` convention.
+HIGHLIGHT_OVERRIDES = {"button_diamond_wide": "button_diamond_highlight_wide"}
+
+WORD_FIXES = {"dpad": "D-Pad", "a": "A", "b": "B", "c": "C", "d": "D"}
+
+
+def read_size(path: Path):
+    head = path.read_text(encoding="utf-8", errors="replace")[:400]
+    m = SIZE_RE.search(head)
+    if not m:
+        raise SystemExit(f"no width/height in {path}")
+    return round(float(m.group(1))), round(float(m.group(2)))
+
+
+def label_for(name: str) -> str:
+    words = name.split("_")
+    out = []
+    for w in words:
+        out.append(WORD_FIXES.get(w, w.capitalize()))
+    return " ".join(out)
+
+
+def classify(name: str):
+    """Return (group, shape, variant, label) for a base sprite name."""
+    if name.startswith("joystick_"):
+        # joystick_<shape>_<pad|nub>_<variant>
+        _, shape, kind, variant = name.split("_")
+        group = "joystick_pad" if kind == "pad" else "joystick_nub"
+        return group, shape, variant, f"{shape.capitalize()} {variant.upper()}"
+    if name.startswith("dpad_element_"):
+        direction = name.rsplit("_", 1)[1]
+        return "dpad_element", None, direction, direction.capitalize()
+    if name.startswith("dpad"):
+        return "dpad", None, None, label_for(name)
+    if name.startswith("direction_"):
+        return "direction", None, None, label_for(name)
+    if name.startswith("button_"):
+        return "button", None, None, label_for(name)[len("Button "):]
+    raise SystemExit(f"unclassified sprite: {name}")
+
+
+def highlight_for(name: str, available: set) -> str | None:
+    if name in HIGHLIGHT_OVERRIDES:
+        cand = HIGHLIGHT_OVERRIDES[name]
+        return cand if cand in available else None
+    candidates = [f"{name}_highlight"]
+    # joystick highlights drop the a/b/c/d variant suffix
+    if name.startswith("joystick_"):
+        candidates.append(name.rsplit("_", 1)[0] + "_highlight")
+    for cand in candidates:
+        if cand in available:
+            return cand
+    return None
+
+
+def copy_tree(src: Path, dest: Path) -> list[str]:
+    dest.mkdir(parents=True, exist_ok=True)
+    names = []
+    for svg in sorted(src.glob("*.svg")):
+        shutil.copy2(svg, dest / svg.name)
+        names.append(svg.stem)
+    return names
+
+
+def main():
+    if len(sys.argv) < 2:
+        raise SystemExit(__doc__)
+    pack = Path(sys.argv[1])
+    vector = pack / "Vector"
+    if not vector.is_dir():
+        raise SystemExit(f"no Vector/ directory inside {pack}")
+
+    if OUT.exists():
+        shutil.rmtree(OUT)
+
+    # --- styles -----------------------------------------------------------
+    style_entries = []
+    base_names = None
+    for sid, name, desc, swatch, dark in STYLES:
+        src = vector / f"Style {sid.upper()}"
+        names = copy_tree(src, OUT / "vector" / f"style-{sid}")
+        if base_names is None:
+            base_names = names
+        elif names != base_names:
+            raise SystemExit(f"Style {sid} sprite list differs from Style A")
+        style_entries.append(
+            {"id": sid, "name": name, "note": desc, "swatch": swatch, "dark": dark,
+             "dir": f"style-{sid}"}
+        )
+
+    # --- highlights -------------------------------------------------------
+    highlight_entries = []
+    highlight_names = None
+    for hid, name, swatch in HIGHLIGHT_SETS:
+        src = vector / f"Highlights {hid.upper()}"
+        names = copy_tree(src, OUT / "vector" / f"highlights-{hid}")
+        if highlight_names is None:
+            highlight_names = set(names)
+        highlight_entries.append(
+            {"id": hid, "name": name, "swatch": swatch, "dir": f"highlights-{hid}"}
+        )
+
+    # --- icons ------------------------------------------------------------
+    icon_names = copy_tree(vector / "Icons", OUT / "vector" / "icons")
+
+    # --- sprite metadata (sizes read from Style A) ------------------------
+    sprites = []
+    for name in base_names:
+        w, h = read_size(vector / "Style A" / f"{name}.svg")
+        group, shape, variant, label = classify(name)
+        entry = {"name": name, "group": group, "label": label, "w": w, "h": h}
+        if shape:
+            entry["shape"] = shape
+        if variant:
+            entry["variant"] = variant
+        hl = highlight_for(name, highlight_names)
+        if hl:
+            entry["highlight"] = hl
+        sprites.append(entry)
+
+    missing = [s["name"] for s in sprites if "highlight" not in s]
+    icons = []
+    for name in icon_names:
+        w, h = read_size(vector / "Icons" / f"{name}.svg")
+        icons.append({"name": name, "label": label_for(name[len("icon_"):]), "w": w, "h": h})
+
+    manifest = {
+        "pack": "Kenney Mobile Controls 1.0",
+        "license": "CC0 1.0 Universal",
+        "source": "https://kenney.nl/assets/mobile-controls",
+        "styles": style_entries,
+        "highlightSets": highlight_entries,
+        "sprites": sprites,
+        "icons": icons,
+    }
+
+    body = json.dumps(manifest, indent=2)
+    (OUT / "manifest.js").write_text(
+        "// Generated by tools/build_assets.py - do not edit by hand.\n"
+        f"export const MANIFEST = {body};\n\nexport default MANIFEST;\n",
+        encoding="utf-8",
+    )
+    (OUT / "manifest.json").write_text(body + "\n", encoding="utf-8")
+
+    print(f"styles      : {len(style_entries)}")
+    print(f"highlights  : {len(highlight_entries)} sets")
+    print(f"sprites     : {len(sprites)} per style")
+    print(f"icons       : {len(icons)}")
+    if missing:
+        print(f"no highlight: {', '.join(missing)}")
+
+
+if __name__ == "__main__":
+    main()

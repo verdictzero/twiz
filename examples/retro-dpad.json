@@ -1,0 +1,322 @@
+{
+  "format": "kenney-touch-layout",
+  "version": 1,
+  "generator": "Touch Layout Studio",
+  "name": "Retro d-pad",
+  "exported": "2026-09-11T22:53:06.876Z",
+  "pack": {
+    "name": "Kenney Mobile Controls 1.0",
+    "license": "CC0 1.0 Universal",
+    "source": "https://kenney.nl/assets/mobile-controls"
+  },
+  "style": {
+    "id": "b",
+    "name": "Light Gloss",
+    "dir": "style-b"
+  },
+  "highlightSet": {
+    "id": "a",
+    "name": "Amber",
+    "dir": "highlights-a"
+  },
+  "reference": {
+    "width": 915,
+    "height": 412,
+    "orientation": "landscape",
+    "device": "Galaxy S24",
+    "deviceId": "galaxy-s24"
+  },
+  "safeArea": {
+    "top": 0,
+    "right": 44,
+    "bottom": 16,
+    "left": 44
+  },
+  "background": {
+    "mode": "gradient",
+    "color": "#1a1d24",
+    "color2": "#0c0e13",
+    "auto": true
+  },
+  "controls": [
+    {
+      "id": "dpad",
+      "label": "dpad",
+      "type": "dpad",
+      "kind": "D-Pad",
+      "action": "dpad",
+      "anchor": "bottom-left",
+      "anchorOffset": {
+        "x": 150,
+        "y": -112
+      },
+      "center": {
+        "x": 150,
+        "y": 300
+      },
+      "rect": {
+        "x": 58,
+        "y": 208,
+        "width": 184,
+        "height": 184
+      },
+      "normalized": {
+        "x": 0.1639,
+        "y": 0.7282
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 193.2,
+        "height": 193.2
+      },
+      "sprite": {
+        "sprite": "dpad",
+        "file": "assets/vector/style-b/dpad.svg",
+        "pressedSprite": "dpad_highlight",
+        "pressedFile": "assets/vector/highlights-a/dpad_highlight.svg"
+      },
+      "dpad": {
+        "layout": "unified",
+        "diagonals": true,
+        "deadZone": 0.22,
+        "actions": {
+          "north": "up",
+          "south": "down",
+          "west": "left",
+          "east": "right"
+        }
+      }
+    },
+    {
+      "id": "button_a",
+      "label": "button_a",
+      "type": "button",
+      "kind": "Button",
+      "action": "confirm",
+      "anchor": "bottom-right",
+      "anchorOffset": {
+        "x": -105,
+        "y": -90
+      },
+      "center": {
+        "x": 810,
+        "y": 322
+      },
+      "rect": {
+        "x": 766,
+        "y": 278,
+        "width": 88,
+        "height": 88
+      },
+      "normalized": {
+        "x": 0.8852,
+        "y": 0.7816
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 52.8
+      },
+      "sprite": {
+        "sprite": "button_circle",
+        "file": "assets/vector/style-b/button_circle.svg",
+        "pressedSprite": "button_circle_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_button_a",
+        "file": "assets/vector/icons/icon_button_a.svg",
+        "width": 39.6,
+        "height": 39.6,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "button_b",
+      "label": "button_b",
+      "type": "button",
+      "kind": "Button",
+      "action": "cancel",
+      "anchor": "center-right",
+      "anchorOffset": {
+        "x": -215,
+        "y": 62
+      },
+      "center": {
+        "x": 700,
+        "y": 268
+      },
+      "rect": {
+        "x": 656,
+        "y": 224,
+        "width": 88,
+        "height": 88
+      },
+      "normalized": {
+        "x": 0.765,
+        "y": 0.6505
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 52.8
+      },
+      "sprite": {
+        "sprite": "button_circle",
+        "file": "assets/vector/style-b/button_circle.svg",
+        "pressedSprite": "button_circle_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_button_b",
+        "file": "assets/vector/icons/icon_button_b.svg",
+        "width": 39.6,
+        "height": 39.6,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "start",
+      "label": "start",
+      "type": "button",
+      "kind": "Button",
+      "action": "start",
+      "anchor": "bottom-center",
+      "anchorOffset": {
+        "x": 54.5,
+        "y": -40
+      },
+      "center": {
+        "x": 512,
+        "y": 372
+      },
+      "rect": {
+        "x": 460,
+        "y": 346,
+        "width": 104,
+        "height": 52
+      },
+      "normalized": {
+        "x": 0.5596,
+        "y": 0.9029
+      },
+      "rotation": 0,
+      "opacity": 0.9,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 104,
+        "height": 52
+      },
+      "sprite": {
+        "sprite": "button_square_wide",
+        "file": "assets/vector/style-b/button_square_wide.svg",
+        "pressedSprite": "button_square_wide_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_square_wide_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_play",
+        "file": "assets/vector/icons/icon_play.svg",
+        "width": 17.68,
+        "height": 17.68,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "select",
+      "label": "select",
+      "type": "button",
+      "kind": "Button",
+      "action": "select",
+      "anchor": "bottom-center",
+      "anchorOffset": {
+        "x": -65.5,
+        "y": -40
+      },
+      "center": {
+        "x": 392,
+        "y": 372
+      },
+      "rect": {
+        "x": 340,
+        "y": 346,
+        "width": 104,
+        "height": 52
+      },
+      "normalized": {
+        "x": 0.4284,
+        "y": 0.9029
+      },
+      "rotation": 0,
+      "opacity": 0.9,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 104,
+        "height": 52
+      },
+      "sprite": {
+        "sprite": "button_square_wide",
+        "file": "assets/vector/style-b/button_square_wide.svg",
+        "pressedSprite": "button_square_wide_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_square_wide_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_menu",
+        "file": "assets/vector/icons/icon_menu.svg",
+        "width": 17.68,
+        "height": 17.68,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    }
+  ],
+  "assets": {
+    "sprites": [
+      "assets/vector/style-b/dpad.svg",
+      "assets/vector/style-b/button_circle.svg",
+      "assets/vector/style-b/button_square_wide.svg"
+    ],
+    "pressed": [
+      "assets/vector/highlights-a/dpad_highlight.svg",
+      "assets/vector/highlights-a/button_circle_highlight.svg",
+      "assets/vector/highlights-a/button_square_wide_highlight.svg"
+    ],
+    "icons": [
+      "assets/vector/icons/icon_button_a.svg",
+      "assets/vector/icons/icon_button_b.svg",
+      "assets/vector/icons/icon_play.svg",
+      "assets/vector/icons/icon_menu.svg"
+    ]
+  }
+}

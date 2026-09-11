@@ -1,0 +1,337 @@
+{
+  "format": "kenney-touch-layout",
+  "version": 1,
+  "generator": "Touch Layout Studio",
+  "name": "Composed parts",
+  "exported": "2026-09-11T22:53:06.960Z",
+  "pack": {
+    "name": "Kenney Mobile Controls 1.0",
+    "license": "CC0 1.0 Universal",
+    "source": "https://kenney.nl/assets/mobile-controls"
+  },
+  "style": {
+    "id": "e",
+    "name": "Dark Flat",
+    "dir": "style-e"
+  },
+  "highlightSet": {
+    "id": "a",
+    "name": "Amber",
+    "dir": "highlights-a"
+  },
+  "reference": {
+    "width": 1280,
+    "height": 720,
+    "orientation": "landscape",
+    "device": "Generic 16:9",
+    "deviceId": "generic-16-9"
+  },
+  "safeArea": {
+    "top": 0,
+    "right": 0,
+    "bottom": 0,
+    "left": 0
+  },
+  "background": {
+    "mode": "gradient",
+    "color": "#6b7487",
+    "color2": "#39404f",
+    "auto": true
+  },
+  "controls": [
+    {
+      "id": "move",
+      "label": "move",
+      "type": "joystick",
+      "kind": "Joystick",
+      "action": "move",
+      "anchor": "bottom-left",
+      "anchorOffset": {
+        "x": 220,
+        "y": -220
+      },
+      "center": {
+        "x": 220,
+        "y": 500
+      },
+      "rect": {
+        "x": 110,
+        "y": 390,
+        "width": 220,
+        "height": 220
+      },
+      "normalized": {
+        "x": 0.1719,
+        "y": 0.6944
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 121
+      },
+      "sprite": {
+        "sprite": "joystick_square_pad_c",
+        "file": "assets/vector/style-e/joystick_square_pad_c.svg",
+        "pressedSprite": "joystick_square_pad_highlight",
+        "pressedFile": "assets/vector/highlights-a/joystick_square_pad_highlight.svg"
+      },
+      "stick": {
+        "nub": {
+          "sprite": "joystick_square_nub_b",
+          "file": "assets/vector/style-e/joystick_square_nub_b.svg",
+          "pressedSprite": "joystick_square_nub_highlight",
+          "pressedFile": "assets/vector/highlights-a/joystick_square_nub_highlight.svg",
+          "width": 110,
+          "height": 110
+        },
+        "travelRadius": 55,
+        "travelRatio": 0.5,
+        "deadZone": 0.12,
+        "deadZoneRadius": 6.6,
+        "mode": "fixed",
+        "highlight": "nub",
+        "recenter": true,
+        "invertY": false,
+        "axes": {
+          "x": "move_x",
+          "y": "move_y"
+        }
+      }
+    },
+    {
+      "id": "camera",
+      "label": "camera",
+      "type": "dpad",
+      "kind": "D-Pad",
+      "action": "camera",
+      "anchor": "bottom-right",
+      "anchorOffset": {
+        "x": -220,
+        "y": -220
+      },
+      "center": {
+        "x": 1060,
+        "y": 500
+      },
+      "rect": {
+        "x": 960,
+        "y": 400,
+        "width": 200,
+        "height": 200
+      },
+      "normalized": {
+        "x": 0.8281,
+        "y": 0.6944
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 200,
+        "height": 200
+      },
+      "sprite": {
+        "sprite": "dpad",
+        "file": "assets/vector/style-e/dpad.svg",
+        "pressedSprite": "dpad_highlight",
+        "pressedFile": "assets/vector/highlights-a/dpad_highlight.svg"
+      },
+      "dpad": {
+        "layout": "composed",
+        "diagonals": false,
+        "deadZone": 0.3,
+        "actions": {
+          "north": "cam_up",
+          "south": "cam_down",
+          "west": "cam_left",
+          "east": "cam_right"
+        },
+        "elements": [
+          {
+            "direction": "north",
+            "sprite": "dpad_element_north",
+            "file": "assets/vector/style-e/dpad_element_north.svg",
+            "pressedSprite": "dpad_element_north_highlight",
+            "pressedFile": "assets/vector/highlights-a/dpad_element_north_highlight.svg",
+            "offset": {
+              "x": 0,
+              "y": -58
+            },
+            "width": 84,
+            "height": 84
+          },
+          {
+            "direction": "south",
+            "sprite": "dpad_element_south",
+            "file": "assets/vector/style-e/dpad_element_south.svg",
+            "pressedSprite": "dpad_element_south_highlight",
+            "pressedFile": "assets/vector/highlights-a/dpad_element_south_highlight.svg",
+            "offset": {
+              "x": 0,
+              "y": 58
+            },
+            "width": 84,
+            "height": 84
+          },
+          {
+            "direction": "west",
+            "sprite": "dpad_element_west",
+            "file": "assets/vector/style-e/dpad_element_west.svg",
+            "pressedSprite": "dpad_element_west_highlight",
+            "pressedFile": "assets/vector/highlights-a/dpad_element_west_highlight.svg",
+            "offset": {
+              "x": -58,
+              "y": 0
+            },
+            "width": 84,
+            "height": 84
+          },
+          {
+            "direction": "east",
+            "sprite": "dpad_element_east",
+            "file": "assets/vector/style-e/dpad_element_east.svg",
+            "pressedSprite": "dpad_element_east_highlight",
+            "pressedFile": "assets/vector/highlights-a/dpad_element_east_highlight.svg",
+            "offset": {
+              "x": 58,
+              "y": 0
+            },
+            "width": 84,
+            "height": 84
+          }
+        ]
+      }
+    },
+    {
+      "id": "interact",
+      "label": "interact",
+      "type": "button",
+      "kind": "Button",
+      "action": "interact",
+      "anchor": "center",
+      "anchorOffset": {
+        "x": 190,
+        "y": 60
+      },
+      "center": {
+        "x": 830,
+        "y": 420
+      },
+      "rect": {
+        "x": 782,
+        "y": 372,
+        "width": 96,
+        "height": 96
+      },
+      "normalized": {
+        "x": 0.6484,
+        "y": 0.5833
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 57.6
+      },
+      "sprite": {
+        "sprite": "button_diamond",
+        "file": "assets/vector/style-e/button_diamond.svg",
+        "pressedSprite": "button_diamond_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_diamond_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_hand",
+        "file": "assets/vector/icons/icon_hand.svg",
+        "width": 43.2,
+        "height": 43.2,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "talk",
+      "label": "talk",
+      "type": "button",
+      "kind": "Button",
+      "action": "talk",
+      "anchor": "center",
+      "anchorOffset": {
+        "x": 90,
+        "y": -20
+      },
+      "center": {
+        "x": 730,
+        "y": 340
+      },
+      "rect": {
+        "x": 688,
+        "y": 298,
+        "width": 84,
+        "height": 84
+      },
+      "normalized": {
+        "x": 0.5703,
+        "y": 0.4722
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 50.4
+      },
+      "sprite": {
+        "sprite": "button_diamond",
+        "file": "assets/vector/style-e/button_diamond.svg",
+        "pressedSprite": "button_diamond_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_diamond_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_talk",
+        "file": "assets/vector/icons/icon_talk.svg",
+        "width": 37.8,
+        "height": 37.8,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    }
+  ],
+  "assets": {
+    "sprites": [
+      "assets/vector/style-e/joystick_square_pad_c.svg",
+      "assets/vector/style-e/joystick_square_nub_b.svg",
+      "assets/vector/style-e/dpad_element_north.svg",
+      "assets/vector/style-e/dpad_element_south.svg",
+      "assets/vector/style-e/dpad_element_west.svg",
+      "assets/vector/style-e/dpad_element_east.svg",
+      "assets/vector/style-e/button_diamond.svg"
+    ],
+    "pressed": [
+      "assets/vector/highlights-a/joystick_square_pad_highlight.svg",
+      "assets/vector/highlights-a/joystick_square_nub_highlight.svg",
+      "assets/vector/highlights-a/dpad_element_north_highlight.svg",
+      "assets/vector/highlights-a/dpad_element_south_highlight.svg",
+      "assets/vector/highlights-a/dpad_element_west_highlight.svg",
+      "assets/vector/highlights-a/dpad_element_east_highlight.svg",
+      "assets/vector/highlights-a/button_diamond_highlight.svg"
+    ],
+    "icons": [
+      "assets/vector/icons/icon_hand.svg",
+      "assets/vector/icons/icon_talk.svg"
+    ]
+  }
+}

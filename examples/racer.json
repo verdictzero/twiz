@@ -1,0 +1,352 @@
+{
+  "format": "kenney-touch-layout",
+  "version": 1,
+  "generator": "Touch Layout Studio",
+  "name": "Racer",
+  "exported": "2026-09-11T22:53:06.667Z",
+  "pack": {
+    "name": "Kenney Mobile Controls 1.0",
+    "license": "CC0 1.0 Universal",
+    "source": "https://kenney.nl/assets/mobile-controls"
+  },
+  "style": {
+    "id": "f",
+    "name": "Light Flat",
+    "dir": "style-f"
+  },
+  "highlightSet": {
+    "id": "a",
+    "name": "Amber",
+    "dir": "highlights-a"
+  },
+  "reference": {
+    "width": 892,
+    "height": 412,
+    "orientation": "landscape",
+    "device": "Pixel 8",
+    "deviceId": "pixel-8"
+  },
+  "safeArea": {
+    "top": 0,
+    "right": 48,
+    "bottom": 16,
+    "left": 48
+  },
+  "background": {
+    "mode": "gradient",
+    "color": "#1a1d24",
+    "color2": "#0c0e13",
+    "auto": true
+  },
+  "controls": [
+    {
+      "id": "steer_left",
+      "label": "steer_left",
+      "type": "button",
+      "kind": "Direction",
+      "action": "steer_left",
+      "anchor": "bottom-left",
+      "anchorOffset": {
+        "x": 92,
+        "y": -82
+      },
+      "center": {
+        "x": 92,
+        "y": 330
+      },
+      "rect": {
+        "x": 34,
+        "y": 272,
+        "width": 116,
+        "height": 116
+      },
+      "normalized": {
+        "x": 0.1031,
+        "y": 0.801
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 75.4
+      },
+      "sprite": {
+        "sprite": "direction_left",
+        "file": "assets/vector/style-f/direction_left.svg",
+        "pressedSprite": "direction_left_highlight",
+        "pressedFile": "assets/vector/highlights-a/direction_left_highlight.svg"
+      }
+    },
+    {
+      "id": "steer_right",
+      "label": "steer_right",
+      "type": "button",
+      "kind": "Direction",
+      "action": "steer_right",
+      "anchor": "bottom-left",
+      "anchorOffset": {
+        "x": 232,
+        "y": -82
+      },
+      "center": {
+        "x": 232,
+        "y": 330
+      },
+      "rect": {
+        "x": 174,
+        "y": 272,
+        "width": 116,
+        "height": 116
+      },
+      "normalized": {
+        "x": 0.2601,
+        "y": 0.801
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 75.4
+      },
+      "sprite": {
+        "sprite": "direction_right",
+        "file": "assets/vector/style-f/direction_right.svg",
+        "pressedSprite": "direction_right_highlight",
+        "pressedFile": "assets/vector/highlights-a/direction_right_highlight.svg"
+      }
+    },
+    {
+      "id": "accelerate",
+      "label": "accelerate",
+      "type": "button",
+      "kind": "Button",
+      "action": "accelerate",
+      "anchor": "bottom-right",
+      "anchorOffset": {
+        "x": -92,
+        "y": -82
+      },
+      "center": {
+        "x": 800,
+        "y": 330
+      },
+      "rect": {
+        "x": 738,
+        "y": 268,
+        "width": 124,
+        "height": 124
+      },
+      "normalized": {
+        "x": 0.8969,
+        "y": 0.801
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 74.4
+      },
+      "sprite": {
+        "sprite": "button_circle",
+        "file": "assets/vector/style-f/button_circle.svg",
+        "pressedSprite": "button_circle_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_pedal",
+        "file": "assets/vector/icons/icon_pedal.svg",
+        "width": 62,
+        "height": 62,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "brake",
+      "label": "brake",
+      "type": "button",
+      "kind": "Button",
+      "action": "brake",
+      "anchor": "bottom-right",
+      "anchorOffset": {
+        "x": -224,
+        "y": -112
+      },
+      "center": {
+        "x": 668,
+        "y": 300
+      },
+      "rect": {
+        "x": 620,
+        "y": 252,
+        "width": 96,
+        "height": 96
+      },
+      "normalized": {
+        "x": 0.7489,
+        "y": 0.7282
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 57.6
+      },
+      "sprite": {
+        "sprite": "button_circle",
+        "file": "assets/vector/style-f/button_circle.svg",
+        "pressedSprite": "button_circle_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_circle_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_pedal_brake",
+        "file": "assets/vector/icons/icon_pedal_brake.svg",
+        "width": 48,
+        "height": 48,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "handbrake",
+      "label": "handbrake",
+      "type": "button",
+      "kind": "Button",
+      "action": "handbrake",
+      "anchor": "center-right",
+      "anchorOffset": {
+        "x": -132,
+        "y": -26
+      },
+      "center": {
+        "x": 760,
+        "y": 180
+      },
+      "rect": {
+        "x": 708,
+        "y": 145.88,
+        "width": 104,
+        "height": 68.25
+      },
+      "normalized": {
+        "x": 0.852,
+        "y": 0.4369
+      },
+      "rotation": 0,
+      "opacity": 1,
+      "hidden": false,
+      "hit": {
+        "shape": "rect",
+        "width": 104,
+        "height": 68.25
+      },
+      "sprite": {
+        "sprite": "button_bean",
+        "file": "assets/vector/style-f/button_bean.svg",
+        "pressedSprite": "button_bean_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_bean_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_arrow_rotate",
+        "file": "assets/vector/icons/icon_arrow_rotate.svg",
+        "width": 28.67,
+        "height": 28.67,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    },
+    {
+      "id": "look_back",
+      "label": "look_back",
+      "type": "button",
+      "kind": "Button",
+      "action": "look_back",
+      "anchor": "top-center",
+      "anchorOffset": {
+        "x": 0,
+        "y": 60
+      },
+      "center": {
+        "x": 446,
+        "y": 60
+      },
+      "rect": {
+        "x": 418,
+        "y": 32,
+        "width": 56,
+        "height": 56
+      },
+      "normalized": {
+        "x": 0.5,
+        "y": 0.1456
+      },
+      "rotation": 0,
+      "opacity": 0.8,
+      "hidden": false,
+      "hit": {
+        "shape": "circle",
+        "radius": 28
+      },
+      "sprite": {
+        "sprite": "button_square",
+        "file": "assets/vector/style-f/button_square.svg",
+        "pressedSprite": "button_square_highlight",
+        "pressedFile": "assets/vector/highlights-a/button_square_highlight.svg"
+      },
+      "icon": {
+        "name": "icon_arrow_curved",
+        "file": "assets/vector/icons/icon_arrow_curved.svg",
+        "width": 25.2,
+        "height": 25.2,
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "rotation": 0,
+        "opacity": 1,
+        "tint": "#ffffff"
+      }
+    }
+  ],
+  "assets": {
+    "sprites": [
+      "assets/vector/style-f/direction_left.svg",
+      "assets/vector/style-f/direction_right.svg",
+      "assets/vector/style-f/button_circle.svg",
+      "assets/vector/style-f/button_bean.svg",
+      "assets/vector/style-f/button_square.svg"
+    ],
+    "pressed": [
+      "assets/vector/highlights-a/direction_left_highlight.svg",
+      "assets/vector/highlights-a/direction_right_highlight.svg",
+      "assets/vector/highlights-a/button_circle_highlight.svg",
+      "assets/vector/highlights-a/button_bean_highlight.svg",
+      "assets/vector/highlights-a/button_square_highlight.svg"
+    ],
+    "icons": [
+      "assets/vector/icons/icon_pedal.svg",
+      "assets/vector/icons/icon_pedal_brake.svg",
+      "assets/vector/icons/icon_arrow_rotate.svg",
+      "assets/vector/icons/icon_arrow_curved.svg"
+    ]
+  }
+}
