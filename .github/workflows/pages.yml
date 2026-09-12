@@ -1,10 +1,12 @@
 # Publish the editor to GitHub Pages.
 #
-# One-time setup: repository Settings -> Pages -> Build and deployment ->
-# Source: "GitHub Actions". After that every push here redeploys the site.
-#
 # The site is plain HTML/CSS/ES modules and already lives in `public/`, so
 # there is nothing to build — the job just uploads that directory.
+#
+# Deploys run from `main` only: the `github-pages` environment restricts which
+# branches may deploy to it, so a push from any other branch would just fail.
+# To deploy from another branch, add it under Settings -> Environments ->
+# github-pages -> Deployment branches as well as here.
 
 name: Deploy to GitHub Pages
 
@@ -12,10 +14,6 @@ on:
   push:
     branches:
       - main
-      - master
-      # The site currently lives on a claude/* branch; remove this once it is
-      # merged into your default branch.
-      - 'claude/**'
   workflow_dispatch:
 
 permissions:

@@ -27,17 +27,18 @@ so style switching is instant and the whole editor works offline.
 
 ## Deploy
 
-**GitHub Pages** is wired up. One-time setup:
+Live at **https://verdictzero.github.io/twiz/**.
 
-> **Settings → Pages → Build and deployment → Source: _GitHub Actions_**
+Every push to `main` runs [`.github/workflows/pages.yml`](.github/workflows/pages.yml),
+which uploads `public/` and deploys it — no build step. All URLs are relative,
+so serving from a project subpath is fine.
 
-After that, every push runs [`.github/workflows/pages.yml`](.github/workflows/pages.yml),
-which uploads `public/` and deploys it. The site lands at
-`https://<user>.github.io/<repo>/` — all URLs are relative, so the project
-subpath is fine.
-
-The workflow triggers on `main`/`master` and on `claude/**` (where this branch
-lives); drop that last line once the site is on your default branch.
+Deploys are limited to `main` on purpose: the `github-pages` environment
+restricts which branches may deploy to it, and a push from any other branch
+fails at job setup with *"Branch … is not allowed to deploy to github-pages due
+to environment protection rules"*. To deploy from a second branch, add it under
+**Settings → Environments → github-pages → Deployment branches** as well as in
+the workflow.
 
 A [`.gitlab-ci.yml`](.gitlab-ci.yml) is included too, if you ever mirror to
 GitLab. Any other static host works the same way — point it at `public/`
