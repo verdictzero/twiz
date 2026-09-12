@@ -40,14 +40,40 @@ export function setStatus(parts) {
   }
 }
 
-/** Trigger a browser download for a Blob. */
-export function download(blob, filename) {
+/**
+ * Hand a file to the user.
+ *
+ * A plain <a download> covers the normal case. Inside a published Artifact the
+ * sandbox makes that inert, so ask the host to save the file instead — the
+ * viewer gets a confirmation prompt and may decline.
+ *
+ * @returns {Promise<'saved'|'declined'|'linked'>}
+ */
+export async function download(blob, filename) {
+  if (typeof window !== 'undefined' && window.claude && window.claude.use) {
+    try {
+      const downloads = await window.claude.use('downloads');
+      if (downloads) {
+        await downloads.save({ filename, data: blob });
+        return 'saved';
+      }
+    } catch (err) {
+      if (err && err.code === 'declined') return 'declined';
+      if (err && err.code) {
+        toast(`Could not save ${filename}: ${err.message || err.code}`, 'err');
+        return 'declined';
+      }
+      // Anything else: fall through to the ordinary link.
+    }
+  }
+
   const url = URL.createObjectURL(blob);
   const a = el('a', { href: url, download: filename });
   document.body.append(a);
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 4000);
+  return 'linked';
 }
 
 export async function copyText(text) {

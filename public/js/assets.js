@@ -5,6 +5,7 @@
  * `toBlob()` works no matter where the site is hosted. */
 
 import { MANIFEST } from '../assets/manifest.js';
+import { SPRITE_SOURCES } from '../assets/sprites.js';
 
 const BASE = 'assets/vector';
 
@@ -56,13 +57,29 @@ const listeners = new Set();
 export function onAssetLoad(fn) { listeners.add(fn); return () => listeners.delete(fn); }
 const notify = () => listeners.forEach(fn => fn());
 
+/** `assets/vector/style-a/button_circle.svg` -> `style-a/button_circle` */
+const bundleKey = url => {
+  const at = url.indexOf(`${BASE}/`);
+  return at < 0 ? null : url.slice(at + BASE.length + 1).replace(/\.svg$/, '');
+};
+
+/** The SVG source for a sprite path, from the bundle or (failing that) the network. */
+export function spriteSource(url) {
+  const key = bundleKey(url);
+  return key && key in SPRITE_SOURCES ? SPRITE_SOURCES[key] : null;
+}
+
 function fetchText(url) {
   let p = textCache.get(url);
   if (!p) {
-    p = fetch(url).then(r => {
-      if (!r.ok) throw new Error(`${r.status} ${url}`);
-      return r.text();
-    });
+    // Every sprite ships inlined, so this normally resolves without a request.
+    const inlined = spriteSource(url);
+    p = inlined != null
+      ? Promise.resolve(inlined)
+      : fetch(url).then(r => {
+          if (!r.ok) throw new Error(`${r.status} ${url}`);
+          return r.text();
+        });
     textCache.set(url, p);
   }
   return p;
@@ -78,6 +95,16 @@ function tintSvg(svg, colour) {
 
 const keyFor = (url, tint) => (tint ? `${url}|${tint}` : url);
 
+/** UTF-8 safe base64, without the deprecated escape/unescape pair. */
+function base64(text) {
+  const bytes = new TextEncoder().encode(text);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  }
+  return btoa(bin);
+}
+
 /** Load a sprite, resolving to a decoded <img>. */
 export function loadImage(url, tint = null) {
   const key = keyFor(url, tint);
@@ -87,8 +114,7 @@ export function loadImage(url, tint = null) {
   const entry = { img: null, ready: false, failed: false };
   entry.promise = fetchText(url)
     .then(svg => {
-      const src = 'data:image/svg+xml;base64,' +
-        btoa(unescape(encodeURIComponent(tint ? tintSvg(svg, tint) : svg)));
+      const src = 'data:image/svg+xml;base64,' + base64(tint ? tintSvg(svg, tint) : svg);
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => { entry.img = img; entry.ready = true; resolve(img); notify(); };
@@ -100,6 +126,24 @@ export function loadImage(url, tint = null) {
 
   imageCache.set(key, entry);
   return entry.promise;
+}
+
+const dataUrlCache = new Map();
+
+/**
+ * A `src` for an <img> in the editor chrome, built from the inlined bundle so
+ * the panels need no network at all. Falls back to the file path if a sprite
+ * somehow is not in the bundle.
+ */
+export function imgSrc(url, tint = null) {
+  const key = keyFor(url, tint);
+  let hit = dataUrlCache.get(key);
+  if (hit === undefined) {
+    const src = spriteSource(url);
+    hit = src == null ? url : 'data:image/svg+xml;base64,' + base64(tint ? tintSvg(src, tint) : src);
+    dataUrlCache.set(key, hit);
+  }
+  return hit;
 }
 
 /** Synchronous accessor for the render loop — returns null until loaded. */

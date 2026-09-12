@@ -99,6 +99,10 @@ export function playPointerUp(e) {
   const rec = pointers.get(e.pointerId);
   if (!rec) return;
   pointers.delete(e.pointerId);
+
+  // Another finger may still be holding this control.
+  for (const other of pointers.values()) if (other.id === rec.id) { renderReadout(); return; }
+
   const c = state.doc.controls.find(x => x.id === rec.id);
   if (c && c.type === 'joystick' && c.stick.recenter === false) {
     const cur = live.get(c.id);

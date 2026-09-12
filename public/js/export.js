@@ -3,7 +3,7 @@
 
 import {
   SPRITES, spritePath, iconPath, pressedName, pressedPath, styleInfo, highlightInfo,
-  image, loadImage, settle, PACK, naturalSize,
+  image, loadImage, settle, spriteSource, PACK, naturalSize,
 } from './assets.js';
 import { drawLayout, usedSprites, usedIcons, dpadElements, kindLabel } from './render.js';
 import {
@@ -409,10 +409,12 @@ export async function toBundle(doc) {
 
   const wanted = [...new Set([...data.assets.sprites, ...data.assets.pressed, ...data.assets.icons])];
   for (const path of wanted) {
+    const name = `${slug}/${path.replace(/^assets\//, 'sprites/')}`;
+    const inlined = spriteSource(path);
+    if (inlined != null) { files.push({ name, data: inlined }); continue; }
     try {
       const res = await fetch(path);
-      if (!res.ok) continue;
-      files.push({ name: `${slug}/${path.replace(/^assets\//, 'sprites/')}`, data: await res.text() });
+      if (res.ok) files.push({ name, data: await res.text() });
     } catch { /* a missing sprite should not sink the whole bundle */ }
   }
 

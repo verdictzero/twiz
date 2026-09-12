@@ -8,7 +8,7 @@ import {
   boundsOf, hitTest, hitRadius, hitShape, toLocal, travelRadius,
   nearestAnchor, anchorPoint, round2, clamp, uniqueId, makeControl,
 } from './model.js';
-import { setStatus } from './ui.js';
+import { setStatus, toast } from './ui.js';
 import { playPointerDown, playPointerMove, playPointerUp, playInput, clearPlay } from './play.js';
 
 const HANDLE = 7;           // handle half-size, screen px
@@ -303,8 +303,9 @@ function drawSelection(ctx) {
     const hs2 = handlesFor(c);
     const rotHandle = hs2.find(h => h.id === 'rotate');
     if (rotHandle) {
-      const top = { x: c.x - (c.h / 2) * Math.sin((c.rotation * Math.PI) / 180),
-                    y: c.y - (c.h / 2) * Math.cos((c.rotation * Math.PI) / 180) };
+      const rot = (c.rotation * Math.PI) / 180;
+      const top = { x: c.x + (c.h / 2) * Math.sin(rot),
+                    y: c.y - (c.h / 2) * Math.cos(rot) };
       ctx.save();
       ctx.strokeStyle = 'rgba(89,217,192,.6)';
       ctx.lineWidth = 1 / z;
@@ -692,7 +693,9 @@ function onDrop(e) {
   e.preventDefault();
   const p = pointerRef(e);
   const { name, kind } = JSON.parse(payload);
-  addSpriteAt(name, kind, p.x, p.y);
+  const result = addSpriteAt(name, kind, p.x, p.y);
+  if (result && result.error) toast(result.error, 'err');
+  else if (result && result.swappedNub) toast('Stick nub swapped.');
 }
 
 /** Add a palette sprite at a point, as a control or as an icon on a control. */
@@ -706,6 +709,16 @@ export function addSpriteAt(name, kind, x, y) {
     }, 'icon');
     select(target.id);
     return { control: target };
+  }
+
+  // A nub dropped on a joystick swaps that joystick's stick.
+  if (name.includes('_nub_')) {
+    const under = controlAt(x, y);
+    if (under && under.type === 'joystick') {
+      commit(() => { under.stick.nub = name; }, 'nub');
+      select(under.id);
+      return { control: under, swappedNub: true };
+    }
   }
 
   let created;

@@ -41,7 +41,7 @@ function drawPending(ctx, w, h) {
   ctx.restore();
 }
 
-function drawIcon(ctx, c, pressed) {
+function drawIcon(ctx, c) {
   if (!c.icon || !c.icon.name) return;
   const nat = naturalSize(c.icon.name);
   const span = Math.min(c.w, c.h) * (c.icon.scale ?? 0.5);
@@ -50,7 +50,7 @@ function drawIcon(ctx, c, pressed) {
   const ox = (c.icon.offsetX || 0) * c.w;
   const oy = (c.icon.offsetY || 0) * c.h;
   ctx.save();
-  ctx.globalAlpha *= (c.icon.opacity ?? 1) * (pressed ? 1 : 1);
+  ctx.globalAlpha *= c.icon.opacity ?? 1;
   if (c.icon.rotation) {
     ctx.translate(ox, oy);
     ctx.rotate((c.icon.rotation * Math.PI) / 180);
@@ -114,7 +114,7 @@ export function drawControl(ctx, c, doc, live) {
     const path = pressed ? (pressedPath(c.sprite, hlSet) || spritePath(c.sprite, style))
                          : spritePath(c.sprite, style);
     if (!drawSprite(ctx, path, 0, 0, c.w, c.h)) drawPending(ctx, c.w, c.h);
-    drawIcon(ctx, c, pressed);
+    drawIcon(ctx, c);
   }
 
   ctx.restore();
@@ -143,7 +143,7 @@ function drawJoystick(ctx, c, style, hlSet, live, pressed) {
   if (c.icon && c.icon.name) {
     ctx.save();
     ctx.translate(off.x, off.y);
-    drawIcon(ctx, c, pressed);
+    drawIcon(ctx, c);
     ctx.restore();
   }
 }

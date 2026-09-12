@@ -1,7 +1,7 @@
 /* The sprite library. Click a tile to drop it in the middle of the screen,
  * or drag it exactly where you want it. */
 
-import { ICONS, spritePath, iconPath, styleInfo, spritesOf } from './assets.js';
+import { ICONS, spritePath, iconPath, styleInfo, spritesOf, imgSrc } from './assets.js';
 import { state, commit, selected } from './store.js';
 import { el, toast } from './ui.js';
 import { addSpriteAt } from './stage.js';
@@ -97,7 +97,7 @@ function tile(name, label, src, kind) {
     title: name,
     dataset: { sprite: name, kind },
   }, [
-    el('img', { src, alt: '', loading: 'lazy', draggable: false }),
+    el('img', { src: imgSrc(src), alt: '', loading: 'lazy', draggable: false }),
     el('span', { text: label }),
   ]);
 

@@ -50,6 +50,7 @@ function populateSelects() {
   HIGHLIGHT_SETS.forEach(h => hl.append(el('option', { value: h.id, text: h.name })));
 
   const dev = $('#sel-device');
+  dev.append(el('option', { value: '', text: 'Custom size' }));
   DEVICES.forEach(d => dev.append(el('option', { value: d.id, text: `${d.name} · ${d.w}x${d.h}` })));
 }
 
@@ -84,7 +85,7 @@ function onStateChange(reason) {
 function syncChrome() {
   $('#sel-style').value = state.doc.style;
   $('#sel-highlight').value = state.doc.highlightSet;
-  $('#sel-device').value = state.doc.reference.deviceId || 'generic-16-9';
+  $('#sel-device').value = state.doc.reference.deviceId || '';
   $('#btn-undo').disabled = !canUndo();
   $('#btn-redo').disabled = !canRedo();
   $('#btn-grid').setAttribute('aria-pressed', String(state.ui.showGrid));
@@ -128,7 +129,10 @@ function bindToolbar() {
     if (doc.background.auto !== false) doc.background = backdropFor(doc.style);
   }, 'style');
   $('#sel-highlight').onchange = e => commit(doc => { doc.highlightSet = e.target.value; }, 'style');
-  $('#sel-device').onchange = e => applyDevice(e.target.value, state.doc.reference.orientation);
+  $('#sel-device').onchange = e => {
+    if (!e.target.value) { syncChrome(); return; }   // "Custom size" is a label, not a choice
+    applyDevice(e.target.value, state.doc.reference.orientation);
+  };
   $('#btn-orient').onclick = () => applyDevice(
     state.doc.reference.deviceId || 'generic-16-9',
     state.doc.reference.orientation === 'portrait' ? 'landscape' : 'portrait',
@@ -276,8 +280,8 @@ async function runExport(kind) {
     switch (kind) {
       case 'json': {
         const text = toJSON(doc);
-        download(new Blob([text], { type: 'application/json' }), `${slug}.json`);
         showJSON(text, `${doc.name} — layout.json`);
+        await download(new Blob([text], { type: 'application/json' }), `${slug}.json`);
         break;
       }
       case 'clipboard': {
@@ -291,15 +295,15 @@ async function runExport(kind) {
       case 'png-transparent': await savePNG(doc, 2, false, `${slug}-transparent@2x.png`); break;
       case 'svg': {
         const svg = await toSVG(doc);
-        download(new Blob([svg], { type: 'image/svg+xml' }), `${slug}.svg`);
-        toast('SVG exported.', 'ok');
+        const how = await download(new Blob([svg], { type: 'image/svg+xml' }), `${slug}.svg`);
+        if (how !== 'declined') toast('SVG exported.', 'ok');
         break;
       }
       case 'bundle': {
         toast('Packing the bundle…');
         const { blob, filename, fileCount } = await toBundle(doc);
-        download(blob, filename);
-        toast(`Bundle exported — ${fileCount} files.`, 'ok');
+        const how = await download(blob, filename);
+        if (how !== 'declined') toast(`Bundle exported — ${fileCount} files.`, 'ok');
         break;
       }
     }
@@ -311,8 +315,10 @@ async function runExport(kind) {
 
 async function savePNG(doc, scale, background, filename) {
   const blob = await toPNG(doc, { scale, background });
-  download(blob, filename);
-  toast(`PNG exported at ${doc.reference.width * scale}x${doc.reference.height * scale}.`, 'ok');
+  const how = await download(blob, filename);
+  if (how !== 'declined') {
+    toast(`PNG exported at ${doc.reference.width * scale}x${doc.reference.height * scale}.`, 'ok');
+  }
 }
 
 function showJSON(text, title) {
@@ -440,9 +446,9 @@ function save() {
 function restore() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const doc = deserialize(raw);
-    return doc.controls.length ? doc : null;
+    // No stored layout at all means a first visit; an empty one is a layout the
+    // user deliberately cleared, and bringing the example back would undo that.
+    return raw ? deserialize(raw) : null;
   } catch {
     return null;
   }

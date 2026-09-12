@@ -2,10 +2,10 @@
  * screen-wide settings. */
 
 import {
-  ICONS, spritePath, iconPath, spritesOf, spriteInfo, styleInfo, naturalSize,
+  ICONS, spritePath, iconPath, spritesOf, spriteInfo, styleInfo, naturalSize, imgSrc,
 } from './assets.js';
 import {
-  state, commit, beginChange, abandonChange, emit, select, selected,
+  state, commit, beginChange, emit, select, selected,
 } from './store.js';
 import {
   ANCHORS, anchorOffset, boundsOf, hitRadius, hitShape, nubSize,
@@ -13,6 +13,7 @@ import {
   setReference,
 } from './model.js';
 import { kindLabel } from './render.js';
+import { fitView } from './stage.js';
 import { DEVICES, referenceFor } from './devices.js';
 import { el, row, sliderRow, checkRow, numberInput, section, toast } from './ui.js';
 
@@ -66,21 +67,19 @@ const edit = (fn, reason = 'change') => commit(fn, reason);
 /** Slider that writes continuously but records a single undo step. */
 function liveSlider(label, opts) {
   let open = false;
-  let touched = false;
   const node = sliderRow(label, {
     ...opts,
     oninput: v => {
-      if (!open) { beginChange(); open = true; touched = false; }
-      touched = true;
+      if (!open) { beginChange(); open = true; }
       opts.apply(v);
       emit('edit');
     },
   });
   const input = node.querySelector('input');
   const close = () => {
-    if (open && !touched) abandonChange();
-    if (open) emit('change');
+    if (!open) return;
     open = false;
+    emit('change');
   };
   input.addEventListener('change', close);
   input.addEventListener('pointerup', close);
@@ -247,7 +246,7 @@ function appearanceSection(c) {
         }
       }),
     }, [
-      el('img', { src: spritePath(s.name, state.doc.style), alt: '', loading: 'lazy' }),
+      el('img', { src: imgSrc(spritePath(s.name, state.doc.style)), alt: '', loading: 'lazy' }),
       el('span', { text: s.label }),
     ])));
 
@@ -271,7 +270,7 @@ function appearanceSection(c) {
           ? { ...c.icon, name: i.name }
           : { name: i.name, scale: c.type === 'joystick' ? 0.4 : 0.5, tint: '#ffffff', opacity: 1, rotation: 0, offsetX: 0, offsetY: 0 };
       }),
-    }, [el('img', { src: iconPath(i.name), alt: '', loading: 'lazy' })])),
+    }, [el('img', { src: imgSrc(iconPath(i.name)), alt: '', loading: 'lazy' })])),
   ]);
   body.push(iconGrid);
 
@@ -309,7 +308,7 @@ function stickSection(c) {
       style: dark ? 'background:#454d5f' : '',
       onclick: () => edit(() => { c.stick.nub = s.name; }),
     }, [
-      el('img', { src: spritePath(s.name, state.doc.style), alt: '', loading: 'lazy' }),
+      el('img', { src: imgSrc(spritePath(s.name, state.doc.style)), alt: '', loading: 'lazy' }),
       el('span', { text: s.label }),
     ])));
 
@@ -467,7 +466,7 @@ function layerRow(c, index) {
     draggable: true,
     onclick: e => select(c.id, { additive: e.shiftKey }),
   }, [
-    el('img', { src: spritePath(c.sprite, state.doc.style), alt: '', loading: 'lazy' }),
+    el('img', { src: imgSrc(spritePath(c.sprite, state.doc.style)), alt: '', loading: 'lazy' }),
     el('span', { class: 'nm', text: c.action || c.id }),
     el('button', {
       class: 'act' + (c.hidden ? ' is-on' : ''), title: c.hidden ? 'Show' : 'Hide',
@@ -520,7 +519,10 @@ function renderScreen() {
   host.append(section('Screen', [
     row('Device', el('select', {
       onchange: e => applyDevice(e.target.value, ref.orientation),
-    }, DEVICES.map(d => option(d.id, `${d.name} · ${d.w}x${d.h}`, ref.deviceId || 'generic-16-9')))),
+    }, [
+      ref.deviceId ? null : el('option', { value: '', text: 'Custom size', selected: true }),
+      ...DEVICES.map(d => option(d.id, `${d.name} · ${d.w}x${d.h}`, ref.deviceId || '')),
+    ].filter(Boolean))),
     row('Orientation', el('select', {
       onchange: e => applyDevice(ref.deviceId || 'generic-16-9', e.target.value),
     }, [
@@ -579,10 +581,12 @@ function renderScreen() {
 
 function applyDevice(deviceId, orientation) {
   edit(doc => setReference(doc, referenceFor(deviceId, orientation)), 'device');
+  fitView();
 }
 
 function resizeScreen(w, h) {
-  edit(doc => setReference(doc, { width: w, height: h, device: 'Custom' }), 'resize');
+  edit(doc => setReference(doc, { width: w, height: h, device: 'Custom', deviceId: '' }), 'resize');
+  fitView();
 }
 
 /* ═══════════════════════ operations ═══════════════════════ */

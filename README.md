@@ -7,7 +7,8 @@ as JSON your game can read.
 ![The editor, with a twin-stick layout open](docs/editor.png)
 
 Built as a static site — plain HTML, CSS and ES modules, no build step, no
-dependencies. It deploys to GitLab Pages straight from `public/`.
+dependencies, no network calls at runtime. It deploys to GitHub Pages straight
+from `public/`.
 
 ---
 
@@ -19,17 +20,28 @@ python3 -m http.server 8000 --directory public
 # then open http://localhost:8000
 ```
 
-Opening `public/index.html` straight off disk will *not* work — ES modules and
-`fetch()` are blocked on `file://`.
+Opening `public/index.html` straight off disk will *not* work — ES modules are
+blocked on `file://`. Once served, though, the app makes no further requests:
+all 462 sprites are inlined into `assets/sprites.js` (664 kB, ~74 kB gzipped),
+so style switching is instant and the whole editor works offline.
 
 ## Deploy
 
-**GitLab Pages** is wired up already: push to the default branch and
-[`.gitlab-ci.yml`](.gitlab-ci.yml) publishes `public/`. The site uses only relative
-URLs, so it works under a project subpath such as `https://you.gitlab.io/twiz/`.
+**GitHub Pages** is wired up. One-time setup:
 
-Any other static host works the same way — point it at `public/` and you're done
-(GitHub Pages, Netlify, Cloudflare Pages, S3, itch.io).
+> **Settings → Pages → Build and deployment → Source: _GitHub Actions_**
+
+After that, every push runs [`.github/workflows/pages.yml`](.github/workflows/pages.yml),
+which uploads `public/` and deploys it. The site lands at
+`https://<user>.github.io/<repo>/` — all URLs are relative, so the project
+subpath is fine.
+
+The workflow triggers on `main`/`master` and on `claude/**` (where this branch
+lives); drop that last line once the site is on your default branch.
+
+A [`.gitlab-ci.yml`](.gitlab-ci.yml) is included too, if you ever mirror to
+GitLab. Any other static host works the same way — point it at `public/`
+(Netlify, Cloudflare Pages, S3, itch.io).
 
 ---
 
@@ -287,9 +299,13 @@ public/                 the site — this is what GitLab Pages publishes
     ui.js               DOM helpers
   assets/
     manifest.js         generated sprite index (size, group, pressed-state pair)
+    sprites.js          generated: every SVG inlined, so the app needs no requests
     vector/             462 SVGs: 8 styles, 2 highlight sets, 42 icons
 examples/               real exports from the app, JSON + PNG
-tools/build_assets.py   regenerates assets/ and the manifest from the Kenney zip
+tools/
+  build_assets.py       regenerates assets/ and both generated files from the zip
+  build_artifact.py     derives the Artifact build from public/index.html
+  smoke-test.mjs        headless end-to-end checks
 docs/                   screenshot used by this README
 ```
 
