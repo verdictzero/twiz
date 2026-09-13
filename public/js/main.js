@@ -11,7 +11,7 @@ import { initStage, fitView, zoomBy, setZoom, requestDraw, isTyping } from './st
 import { initPalette, renderPalette } from './palette.js';
 import {
   initInspector, renderInspector, duplicateSelection, mirrorSelection,
-  deleteSelection, reorderSelection, alignTo,
+  deleteSelection, reorderSelection, alignSelection, distributeSelection,
 } from './inspector.js';
 import { serialize, deserialize, toJSON, toPNG, toSVG, toBundle, slugify } from './export.js';
 import { renderReadout, clearPlay } from './play.js';
@@ -150,18 +150,17 @@ function bindToolbar() {
   $('#btn-safe').onclick = () => setUI({ showSafe: !state.ui.showSafe });
   $('#btn-mirror-guide').onclick = () => setUI({ showCenterLine: !state.ui.showCenterLine });
 
-  $('#seg-arrange').addEventListener('click', e => {
+  const onArrange = e => {
     const btn = e.target instanceof Element ? e.target.closest('[data-arrange]') : null;
     if (!btn) return;
-    const sel = selected();
-    switch (btn.dataset.arrange) {
-      case 'mirror': mirrorSelection(); break;
-      case 'align-h': alignTo(sel, 'centerX'); break;
-      case 'align-v': alignTo(sel, 'centerY'); break;
-      case 'front': reorderSelection('front'); break;
-      case 'back': reorderSelection('back'); break;
-    }
-  });
+    const what = btn.dataset.arrange;
+    if (what === 'mirror') mirrorSelection();
+    else if (what === 'front' || what === 'back') reorderSelection(what);
+    else if (what.startsWith('align-')) alignSelection(what.slice(6));
+    else if (what.startsWith('dist-')) distributeSelection(what.slice(5));
+  };
+  $('#seg-arrange').addEventListener('click', onArrange);
+  $('#seg-space').addEventListener('click', onArrange);
 
   $('#btn-play').onclick = () => togglePlay();
   $('#btn-play-exit').onclick = () => togglePlay(false);

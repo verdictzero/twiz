@@ -144,6 +144,96 @@ const roundTrip = await page.evaluate(async () => {
 });
 for (const r of roundTrip) check(`round trip preserves "${r.id}"`, r.same);
 
+/* ── arrange: align and distribute against each frame ──────────────── */
+
+const arrange = await page.evaluate(async () => {
+  const { makeDoc, makeControl } = await import('./js/model.js');
+  const { align, distribute, setGap, gapsOf, frameRect, unionBounds, describeGaps } =
+    await import('./js/arrange.js');
+
+  // Deliberately ragged, deliberately different widths: centre-based spacing
+  // would leave uneven visual gaps here, edge-based spacing will not.
+  const build = () => {
+    const doc = makeDoc();
+    doc.safeArea = { top: 20, right: 90, bottom: 20, left: 90 };
+    doc.controls = [['b1', 140, 300, 70], ['b2', 300, 320, 110],
+                    ['b3', 520, 290, 50], ['b4', 900, 310, 90]]
+      .map(([id, x, y, w]) => {
+        const c = makeControl('button_circle', { x, y });
+        c.id = id; c.w = w; c.h = w;
+        return c;
+      });
+    return doc;
+  };
+  const same = list => new Set(list.map(Math.round)).size === 1;
+  const out = {};
+
+  {
+    const doc = build();
+    distribute(doc.controls, 'x', frameRect('selection', doc, doc.controls), false);
+    const g = gapsOf(doc.controls, 'x');
+    out.selection = {
+      even: same(g),
+      endsFixed: Math.round(doc.controls[0].x) === 140 && Math.round(doc.controls[3].x) === 900,
+      gaps: g.map(Math.round),
+    };
+  }
+  {
+    const doc = build();
+    const frame = frameRect('screen', doc, doc.controls);
+    distribute(doc.controls, 'x', frame, true);
+    const g = gapsOf(doc.controls, 'x', frame);
+    out.screen = { even: same(g), count: g.length, gap: Math.round(g[0]) };
+  }
+  {
+    const doc = build();
+    const frame = frameRect('safe', doc, doc.controls);
+    distribute(doc.controls, 'x', frame, true);
+    const u = unionBounds(doc.controls);
+    out.safe = {
+      even: same(gapsOf(doc.controls, 'x', frame)),
+      inside: u.x >= frame.x - 0.01 && u.x + u.w <= frame.x + frame.w + 0.01,
+    };
+  }
+  {
+    const doc = build();
+    setGap(doc.controls, 'x', 40, frameRect('selection', doc, doc.controls), false);
+    out.exact = gapsOf(doc.controls, 'x').every(v => Math.abs(v - 40) < 0.01);
+  }
+  {
+    const doc = build();
+    const one = [doc.controls[1]];
+    distribute(one, 'x', frameRect('screen', doc, one), true);
+    out.centred = Math.round(one[0].x) === Math.round(doc.reference.width / 2);
+  }
+  {
+    const doc = build();
+    align(doc.controls, 'right', frameRect('safe', doc, doc.controls));
+    const edge = doc.reference.width - doc.safeArea.right;
+    out.alignSafe = doc.controls.every(c => Math.abs(c.x + c.w / 2 - edge) < 0.01);
+  }
+  {
+    const doc = build();
+    out.twoIsNoop = distribute(doc.controls.slice(0, 2), 'x',
+      frameRect('selection', doc, doc.controls.slice(0, 2)), false) === false;
+  }
+  out.wording = describeGaps([-10, -4]) === 'overlapping' && describeGaps([24, 24]) === 'even, 24 px';
+  return out;
+});
+
+check('distribute within the selection equalises edge gaps',
+  arrange.selection.even && arrange.selection.endsFixed,
+  `gaps ${arrange.selection.gaps.join(', ')}, outermost fixed`);
+check('distribute to the screen counts both edge gaps',
+  arrange.screen.even && arrange.screen.count === 5, `${arrange.screen.count} gaps of ${arrange.screen.gap}px`);
+check('distribute to the safe area stays inside it',
+  arrange.safe.even && arrange.safe.inside);
+check('an exact gap applies to every pair', arrange.exact);
+check('one control distributed to the screen is centred', arrange.centred);
+check('align right honours the safe-area inset', arrange.alignSafe);
+check('two controls cannot distribute within the selection', arrange.twoIsNoop);
+check('gap summaries read as words, not negative numbers', arrange.wording);
+
 /* ── no console noise ──────────────────────────────────────────────── */
 
 check('no console errors', consoleErrors.length === 0, consoleErrors.join(' | '));

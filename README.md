@@ -74,6 +74,24 @@ orientation and the layout moves with the anchors instead of falling apart.
 has its own shape and size (shown as the blue dashed outline) and exports as an
 explicit circle or rectangle.
 
+**Align and distribute, measured against what you choose.** Select several
+controls and the Arrange panel offers the usual six alignments and even
+spacing — with a **Measure against** switch that decides what "even" means:
+
+| Measure against | What distribute does |
+|---|---|
+| **Selection** | The outermost two stay put; the ones between them move until every gap matches. Needs three or more. |
+| **Screen** | Spreads the run across the whole screen, counting the gap before the first control and after the last. One control on its own just gets centred. |
+| **Safe area** | The same, but inside the safe-area insets — so nothing lands under a notch or home indicator. |
+
+Gaps are measured **between bounding boxes, not centres**, so a row of
+differently sized buttons ends up visually even rather than mathematically
+even. Align obeys the same switch: align-right against *Safe area* parks a
+control on the inset, not the screen edge. There's also an exact-gap field
+("space these 24 px apart", keeping the group where it sits) and a live
+readout of the current gaps, so you can see whether a row is even before
+touching anything. Rotated controls are handled by their rotated bounds.
+
 **Test mode** (`P`) runs the layout with real multi-touch. Sticks clamp and apply
 their dead zone, buttons swap to the pressed highlight sprite, and a live readout
 shows exactly the values a game would receive. If it feels wrong here, it will feel
@@ -92,6 +110,7 @@ backdrop follows the style so dark sprites stay readable.
 | `Ctrl/⌘ A` | select all | `P` | test mode |
 | `Ctrl/⌘ S` | export JSON | `G` `S` `A` `C` | grid, snap, safe area, centre line |
 | arrows | nudge 1px (`⇧` 10px) | `[` `]` | send back / bring front |
+| marquee-drag | select several | `⇧`-click | add to selection |
 | `0` / `1` | fit / 100% | `Space`-drag | pan |
 
 ---
@@ -296,6 +315,7 @@ public/                 the site — this is what GitLab Pages publishes
     examples.js         the six preset layouts
     assets.js           sprite loading and caching
     devices.js          screen presets
+    arrange.js          align and distribute — pure geometry, unit tested
     zip.js              a small store-only zip writer
     ui.js               DOM helpers
   assets/
@@ -320,8 +340,8 @@ python3 tools/build_assets.py path/to/unzipped-mobile-controls
 
 `tools/smoke-test.mjs` drives the real app in a headless browser and checks the
 parts that break quietly — stick clamping and dead zones, exporting a layout the
-canvas has not drawn yet, anchors surviving a device change, and a JSON round trip
-across all six presets.
+canvas has not drawn yet, anchors surviving a device change, align and distribute
+against all three frames, and a JSON round trip across all six presets.
 
 ```sh
 python3 -m http.server 8899 --directory public &

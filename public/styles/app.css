@@ -386,3 +386,25 @@ input[type="color"] { width: 34px; height: 28px; padding: 2px; background: var(-
   .topbar { overflow-x: auto; }
 }
 .panel-toggle { display: none; }
+
+/* arrange panel */
+.seg-choice { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
+  padding: 3px; background: var(--bg-sunken); border: 1px solid var(--line-soft); border-radius: var(--radius-sm); }
+.seg-choice button {
+  padding: 5px 4px; background: none; border: 0; border-radius: 4px;
+  color: var(--text-dim); font-size: 11px; cursor: pointer; white-space: nowrap;
+}
+.seg-choice button:hover:not(:disabled) { background: var(--bg-hover); color: var(--text); }
+.seg-choice button.is-on { background: rgba(89,217,192,.16); color: var(--accent); }
+.seg-choice button:disabled { opacity: .35; cursor: default; }
+
+.align-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.align-grid .btn { width: 100%; }
+
+.btn-row .btn svg + span { margin-left: 2px; }
+
+/* the exact-gap row: a small field, then the two apply buttons */
+.row.gap-row .ctl > input[type="number"] { width: 62px; flex: none; }
+.row.gap-row .ctl { gap: 5px; }
+.row.gap-row .ctl .btn { margin-left: auto; }
+.row.gap-row .ctl .btn + .btn { margin-left: 0; }

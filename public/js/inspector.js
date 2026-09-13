@@ -14,6 +14,10 @@ import {
 } from './model.js';
 import { kindLabel } from './render.js';
 import { fitView } from './stage.js';
+import {
+  FRAMES, frameRect, align as alignIn, distribute as distributeIn,
+  setGap as setGapIn, gapsOf, describeGaps, minimumFor, unionBounds,
+} from './arrange.js';
 import { DEVICES, referenceFor } from './devices.js';
 import { el, row, sliderRow, checkRow, numberInput, section, toast } from './ui.js';
 
@@ -97,6 +101,7 @@ function renderProps() {
   const c = sel[0];
   host.append(identitySection(c));
   host.append(transformSection(c));
+  host.append(arrangeSection(sel));
   host.append(appearanceSection(c));
   if (c.type === 'joystick') host.append(stickSection(c));
   if (c.type === 'dpad') host.append(dpadSection(c));
@@ -113,22 +118,12 @@ function renderNoSelection() {
 }
 
 function renderMultiSelection(sel) {
+  const u = unionBounds(sel);
   host.append(section(`${sel.length} controls selected`, [
-    el('div', { class: 'btn-row' }, [
-      el('button', { class: 'btn sm', text: 'Align L', onclick: () => alignTo(sel, 'left') }),
-      el('button', { class: 'btn sm', text: 'Centre X', onclick: () => alignTo(sel, 'centerX') }),
-      el('button', { class: 'btn sm', text: 'Align R', onclick: () => alignTo(sel, 'right') }),
-    ]),
-    el('div', { class: 'btn-row', style: 'margin-top:6px' }, [
-      el('button', { class: 'btn sm', text: 'Align T', onclick: () => alignTo(sel, 'top') }),
-      el('button', { class: 'btn sm', text: 'Centre Y', onclick: () => alignTo(sel, 'centerY') }),
-      el('button', { class: 'btn sm', text: 'Align B', onclick: () => alignTo(sel, 'bottom') }),
-    ]),
-    el('div', { class: 'btn-row', style: 'margin-top:6px' }, [
-      el('button', { class: 'btn sm', text: 'Space across', onclick: () => distribute(sel, 'x') }),
-      el('button', { class: 'btn sm', text: 'Space down', onclick: () => distribute(sel, 'y') }),
-    ]),
+    el('p', { class: 'hint',
+      text: `Bounds ${Math.round(u.w)} x ${Math.round(u.h)} px, centred on ${Math.round(u.x + u.w / 2)}, ${Math.round(u.y + u.h / 2)}.` }),
   ]));
+  host.append(arrangeSection(sel));
 
   // Sizes as they stand at this render; the panel re-renders after every drag,
   // so the scale slider always multiplies from a fresh baseline.
@@ -443,6 +438,119 @@ function actionsSection(c) {
 const option = (value, label, current) =>
   el('option', { value, text: label, selected: value === current });
 
+/* ═══════════════════════ arrange ═══════════════════════ */
+
+const ALIGN_ICONS = {
+  left:    '<path d="M3 3h2v18H3z"/><rect x="7" y="6" width="13" height="4"/><rect x="7" y="14" width="9" height="4"/>',
+  centerX: '<path d="M11 2h2v20h-2z" opacity=".5"/><rect x="4" y="6" width="16" height="4"/><rect x="7" y="14" width="10" height="4"/>',
+  right:   '<path d="M19 3h2v18h-2z"/><rect x="4" y="6" width="13" height="4"/><rect x="8" y="14" width="9" height="4"/>',
+  top:     '<path d="M3 3h18v2H3z"/><rect x="6" y="7" width="4" height="13"/><rect x="14" y="7" width="4" height="9"/>',
+  centerY: '<path d="M2 11h20v2H2z" opacity=".5"/><rect x="6" y="4" width="4" height="16"/><rect x="14" y="7" width="4" height="10"/>',
+  bottom:  '<path d="M3 19h18v2H3z"/><rect x="6" y="4" width="4" height="13"/><rect x="14" y="8" width="4" height="9"/>',
+};
+
+const ALIGN_LABELS = {
+  left: 'Align left edges', centerX: 'Centre horizontally', right: 'Align right edges',
+  top: 'Align top edges', centerY: 'Centre vertically', bottom: 'Align bottom edges',
+};
+
+const DIST_ICONS = {
+  x: '<rect x="2" y="5" width="4" height="14"/><rect x="10" y="5" width="4" height="14"/><rect x="18" y="5" width="4" height="14"/>',
+  y: '<rect x="5" y="2" width="14" height="4"/><rect x="5" y="10" width="14" height="4"/><rect x="5" y="18" width="14" height="4"/>',
+};
+
+/** Selection-relative only means something with two or more controls. */
+function activeFrame(count) {
+  const want = state.ui.arrangeFrame || 'selection';
+  return want === 'selection' && count < 2 ? 'screen' : want;
+}
+
+function arrangeSection(sel) {
+  const doc = state.doc;
+  const kind = activeFrame(sel.length);
+  const frame = frameRect(kind, doc, sel);
+  const edges = kind !== 'selection';
+  const canDistribute = sel.length >= minimumFor(edges);
+
+  const frameChoice = el('div', { class: 'seg-choice' }, FRAMES.map(f => {
+    const disabled = f.id === 'selection' && sel.length < 2;
+    return el('button', {
+      type: 'button',
+      class: kind === f.id ? 'is-on' : '',
+      disabled,
+      title: disabled ? 'Needs at least two controls' : f.note,
+      onclick: () => { state.ui.arrangeFrame = f.id; emit('ui'); },
+      text: f.name,
+    });
+  }));
+
+  const alignButton = mode => el('button', {
+    type: 'button',
+    class: 'btn icon sm',
+    title: `${ALIGN_LABELS[mode]} — ${kind === 'selection' ? 'within the selection' : `to the ${kind === 'safe' ? 'safe area' : 'screen'}`}`,
+    onclick: () => edit(() => alignIn(sel, mode, frameRect(kind, doc, sel)), 'align'),
+    html: `<svg viewBox="0 0 24 24" aria-hidden="true">${ALIGN_ICONS[mode]}</svg>`,
+  });
+
+  const distButton = axis => el('button', {
+    type: 'button',
+    class: 'btn sm',
+    disabled: !canDistribute,
+    title: canDistribute
+      ? (edges
+        ? `Spread evenly across the ${kind === 'safe' ? 'safe area' : 'screen'}, edge gaps included`
+        : 'Even gaps between them; the outermost two stay put')
+      : `Needs at least ${minimumFor(edges)} controls`,
+    onclick: () => edit(() => distributeIn(sel, axis, frameRect(kind, doc, sel), edges), 'distribute'),
+    html: `<svg viewBox="0 0 24 24" aria-hidden="true">${DIST_ICONS[axis]}</svg><span>${axis === 'x' ? 'Across' : 'Down'}</span>`,
+  });
+
+  const body = [
+    el('p', { class: 'hint', style: 'margin:-2px 0 7px', text: 'Measure against' }),
+    frameChoice,
+    el('p', { class: 'hint', style: 'margin:10px 0 6px', text: 'Align' }),
+    el('div', { class: 'align-grid' }, [
+      alignButton('left'), alignButton('centerX'), alignButton('right'),
+      alignButton('top'), alignButton('centerY'), alignButton('bottom'),
+    ]),
+    el('p', { class: 'hint', style: 'margin:12px 0 6px', text: 'Even spacing' }),
+    el('div', { class: 'btn-row' }, [distButton('x'), distButton('y')]),
+  ];
+
+  if (sel.length >= 2) {
+    const gap = state.ui.arrangeGap ?? 24;
+    body.push(el('div', { class: 'row gap-row', style: 'margin-top:8px' }, [
+      el('label', { text: 'Exact gap' }),
+      el('div', { class: 'ctl' }, [
+        numberInput(gap, v => { state.ui.arrangeGap = Math.max(-200, v); }, { step: 1 }),
+        el('span', { class: 'num-unit', text: 'px' }),
+        el('button', {
+          class: 'btn icon sm', title: 'Apply that gap horizontally',
+          onclick: () => edit(() => setGapIn(sel, 'x', state.ui.arrangeGap ?? 24, frameRect(kind, doc, sel), edges), 'gap'),
+          html: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 11h20v2H2z"/><path d="M6 6l-5 6 5 6zm12 0l5 6-5 6z"/></svg>',
+        }),
+        el('button', {
+          class: 'btn icon sm', title: 'Apply that gap vertically',
+          onclick: () => edit(() => setGapIn(sel, 'y', state.ui.arrangeGap ?? 24, frameRect(kind, doc, sel), edges), 'gap'),
+          html: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 2h2v20h-2z"/><path d="M6 6l6-5 6 5zm0 12l6 5 6-5z"/></svg>',
+        }),
+      ]),
+    ]));
+
+    const across = describeGaps(gapsOf(sel, 'x', edges ? frame : null));
+    const down = describeGaps(gapsOf(sel, 'y', edges ? frame : null));
+    body.push(el('p', { class: 'hint', style: 'margin-top:7px' }, [
+      'Gaps now — across ', el('b', { text: across || '–' }), ', down ', el('b', { text: down || '–' }),
+      edges ? ' (edges counted)' : '',
+    ]));
+  } else {
+    body.push(el('p', { class: 'hint', style: 'margin-top:7px',
+      text: 'Select more controls to space them relative to each other.' }));
+  }
+
+  return section('Arrange', body);
+}
+
 /* ═══════════════════════ layers ═══════════════════════ */
 
 function renderLayers() {
@@ -656,40 +764,23 @@ export function reorderSelection(where) {
   }, 'reorder');
 }
 
-export function alignTo(sel, mode) {
-  if (sel.length < 2) return;
-  const boxes = sel.map(c => ({ c, b: boundsOf(c) }));
-  commit(() => {
-    if (mode === 'left') {
-      const x = Math.min(...boxes.map(o => o.b.x));
-      boxes.forEach(o => { o.c.x = round2(x + o.b.w / 2); });
-    } else if (mode === 'right') {
-      const x = Math.max(...boxes.map(o => o.b.x + o.b.w));
-      boxes.forEach(o => { o.c.x = round2(x - o.b.w / 2); });
-    } else if (mode === 'centerX') {
-      const x = boxes.reduce((s, o) => s + o.c.x, 0) / boxes.length;
-      boxes.forEach(o => { o.c.x = round2(x); });
-    } else if (mode === 'top') {
-      const y = Math.min(...boxes.map(o => o.b.y));
-      boxes.forEach(o => { o.c.y = round2(y + o.b.h / 2); });
-    } else if (mode === 'bottom') {
-      const y = Math.max(...boxes.map(o => o.b.y + o.b.h));
-      boxes.forEach(o => { o.c.y = round2(y - o.b.h / 2); });
-    } else if (mode === 'centerY') {
-      const y = boxes.reduce((s, o) => s + o.c.y, 0) / boxes.length;
-      boxes.forEach(o => { o.c.y = round2(y); });
-    }
-  }, 'align');
+/** Toolbar entry points — they follow the panel's "measure against" choice. */
+export function alignSelection(mode) {
+  const sel = selected();
+  if (!sel.length) return;
+  const kind = activeFrame(sel.length);
+  edit(() => alignIn(sel, mode, frameRect(kind, state.doc, sel)), 'align');
 }
 
-export function distribute(sel, axis) {
-  if (sel.length < 3) { toast('Select at least three controls to space them out.', 'err'); return; }
-  const key = axis === 'x' ? 'x' : 'y';
-  const sorted = sel.slice().sort((a, b) => a[key] - b[key]);
-  const first = sorted[0][key];
-  const last = sorted[sorted.length - 1][key];
-  const step = (last - first) / (sorted.length - 1);
-  commit(() => {
-    sorted.forEach((c, i) => { c[key] = round2(first + step * i); });
-  }, 'distribute');
+export function distributeSelection(axis) {
+  const sel = selected();
+  const kind = activeFrame(sel.length);
+  const edges = kind !== 'selection';
+  if (sel.length < minimumFor(edges)) {
+    toast(edges
+      ? 'Select a control to spread out.'
+      : 'Three or more controls, or measure against the screen instead.', 'err');
+    return;
+  }
+  edit(() => distributeIn(sel, axis, frameRect(kind, state.doc, sel), edges), 'distribute');
 }

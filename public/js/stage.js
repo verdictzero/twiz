@@ -769,7 +769,12 @@ export function initStage() {
 
   new ResizeObserver(resize).observe(viewport);
   onAssetLoad(requestDraw);
-  subscribe(() => requestDraw());
+  // A freshly loaded document has not been framed yet; fit it rather than
+  // leaving part of the screen outside the viewport.
+  subscribe(reason => {
+    if (reason === 'load' && !state.view.fitted) fitView();
+    else requestDraw();
+  });
   resize();
 }
 
