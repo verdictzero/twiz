@@ -3,7 +3,7 @@
   "version": 1,
   "generator": "Touch Layout Studio",
   "name": "Retro d-pad",
-  "exported": "2026-09-13T16:21:08.395Z",
+  "exported": "2026-09-13T18:27:21.810Z",
   "pack": {
     "name": "Kenney Mobile Controls 1.0",
     "license": "CC0 1.0 Universal",
@@ -203,21 +203,21 @@
       "anchor": "bottom-center",
       "anchorOffset": {
         "x": 54.5,
-        "y": -40
+        "y": -54
       },
       "center": {
         "x": 512,
-        "y": 372
+        "y": 358
       },
       "rect": {
         "x": 460,
-        "y": 346,
+        "y": 332,
         "width": 104,
         "height": 52
       },
       "normalized": {
         "x": 0.5596,
-        "y": 0.9029
+        "y": 0.8689
       },
       "rotation": 0,
       "opacity": 0.9,
@@ -256,21 +256,21 @@
       "anchor": "bottom-center",
       "anchorOffset": {
         "x": -65.5,
-        "y": -40
+        "y": -54
       },
       "center": {
         "x": 392,
-        "y": 372
+        "y": 358
       },
       "rect": {
         "x": 340,
-        "y": 346,
+        "y": 332,
         "width": 104,
         "height": 52
       },
       "normalized": {
         "x": 0.4284,
-        "y": 0.9029
+        "y": 0.8689
       },
       "rotation": 0,
       "opacity": 0.9,

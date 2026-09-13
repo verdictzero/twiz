@@ -19,6 +19,8 @@ export const state = {
     play: false,
     paletteTab: 'controls',
     inspectorTab: 'props',
+    itemSearch: '',
+    itemIssuesOnly: false,
     search: '',
   },
   drag: null,              // live interaction bookkeeping (never in history)

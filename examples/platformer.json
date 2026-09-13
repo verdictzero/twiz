@@ -3,7 +3,7 @@
   "version": 1,
   "generator": "Touch Layout Studio",
   "name": "Platformer",
-  "exported": "2026-09-13T16:21:08.117Z",
+  "exported": "2026-09-13T18:27:21.509Z",
   "pack": {
     "name": "Kenney Mobile Controls 1.0",
     "license": "CC0 1.0 Universal",
@@ -48,21 +48,21 @@
       "anchor": "bottom-left",
       "anchorOffset": {
         "x": 150,
-        "y": -93
+        "y": -113
       },
       "center": {
         "x": 150,
-        "y": 300
+        "y": 280
       },
       "rect": {
         "x": 66,
-        "y": 216,
+        "y": 196,
         "width": 168,
         "height": 168
       },
       "normalized": {
         "x": 0.1761,
-        "y": 0.7634
+        "y": 0.7125
       },
       "rotation": 0,
       "opacity": 1,
@@ -108,22 +108,22 @@
       "action": "jump",
       "anchor": "bottom-right",
       "anchorOffset": {
-        "x": -92,
-        "y": -73
+        "x": -117,
+        "y": -93
       },
       "center": {
-        "x": 760,
-        "y": 320
+        "x": 735,
+        "y": 300
       },
       "rect": {
-        "x": 708,
-        "y": 268,
+        "x": 683,
+        "y": 248,
         "width": 104,
         "height": 104
       },
       "normalized": {
-        "x": 0.892,
-        "y": 0.8142
+        "x": 0.8627,
+        "y": 0.7634
       },
       "rotation": 0,
       "opacity": 1,
@@ -160,22 +160,22 @@
       "action": "attack",
       "anchor": "center-right",
       "anchorOffset": {
-        "x": -202,
-        "y": 53.5
+        "x": -237,
+        "y": 58.5
       },
       "center": {
-        "x": 650,
-        "y": 250
+        "x": 615,
+        "y": 255
       },
       "rect": {
-        "x": 604,
-        "y": 204,
+        "x": 569,
+        "y": 209,
         "width": 92,
         "height": 92
       },
       "normalized": {
-        "x": 0.7629,
-        "y": 0.6361
+        "x": 0.7218,
+        "y": 0.6489
       },
       "rotation": 0,
       "opacity": 1,
@@ -212,22 +212,22 @@
       "action": "dash",
       "anchor": "center-right",
       "anchorOffset": {
-        "x": -100,
-        "y": -0.5
+        "x": -117,
+        "y": -11.5
       },
       "center": {
-        "x": 752,
-        "y": 196
+        "x": 735,
+        "y": 185
       },
       "rect": {
-        "x": 714,
-        "y": 158,
+        "x": 697,
+        "y": 147,
         "width": 76,
         "height": 76
       },
       "normalized": {
-        "x": 0.8826,
-        "y": 0.4987
+        "x": 0.8627,
+        "y": 0.4707
       },
       "rotation": 0,
       "opacity": 0.92,
@@ -264,22 +264,22 @@
       "action": "pause",
       "anchor": "top-right",
       "anchorOffset": {
-        "x": -52,
-        "y": 46
+        "x": -90,
+        "y": 40
       },
       "center": {
-        "x": 800,
-        "y": 46
+        "x": 762,
+        "y": 40
       },
       "rect": {
-        "x": 772,
-        "y": 18,
+        "x": 734,
+        "y": 12,
         "width": 56,
         "height": 56
       },
       "normalized": {
-        "x": 0.939,
-        "y": 0.117
+        "x": 0.8944,
+        "y": 0.1018
       },
       "rotation": 0,
       "opacity": 0.8,

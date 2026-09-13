@@ -18,6 +18,7 @@ import {
   FRAMES, frameRect, align as alignIn, distribute as distributeIn,
   setGap as setGapIn, gapsOf, describeGaps, minimumFor, unionBounds,
 } from './arrange.js';
+import { analyse, summarize, TYPE_NAMES } from './inventory.js';
 import { DEVICES, referenceFor } from './devices.js';
 import { el, row, sliderRow, checkRow, numberInput, section, toast } from './ui.js';
 
@@ -57,7 +58,7 @@ export function renderInspector() {
   const scroll = host.scrollTop;
   host.innerHTML = '';
 
-  if (state.ui.inspectorTab === 'layers') renderLayers();
+  if (state.ui.inspectorTab === 'items') renderItems();
   else if (state.ui.inspectorTab === 'screen') renderScreen();
   else renderProps();
 
@@ -551,55 +552,175 @@ function arrangeSection(sel) {
   return section('Arrange', body);
 }
 
-/* ═══════════════════════ layers ═══════════════════════ */
+/* ═══════════════════════ items ═══════════════════════ */
 
-function renderLayers() {
-  const list = state.doc.controls;
-  if (!list.length) {
-    host.append(el('div', { class: 'insp-empty', html: '<p>No controls yet.</p>' }));
+/** Anchor for shift-click range selection, like any other list. */
+let rangeAnchor = null;
+
+function renderItems() {
+  const items = analyse(state.doc);
+  if (!items.length) {
+    host.append(el('div', { class: 'insp-empty' }, [
+      el('p', { html: '<b>Nothing placed yet.</b>' }),
+      el('p', { text: 'Everything you drop on the screen shows up here, with its id, action and anything that looks wrong.' }),
+    ]));
     return;
   }
-  const wrap = el('div', { class: 'layer-list' });
-  // Topmost first, matching what you see on the stage.
-  for (let i = list.length - 1; i >= 0; i--) {
-    const c = list[i];
-    wrap.append(layerRow(c, i));
+
+  const stats = summarize(items);
+  const query = (state.ui.itemSearch || '').trim().toLowerCase();
+  const onlyIssues = !!state.ui.itemIssuesOnly;
+
+  const visible = items.filter(it => {
+    if (onlyIssues && !it.issues.length) return false;
+    if (!query) return true;
+    const c = it.control;
+    return [c.id, c.action, c.label, c.sprite, TYPE_NAMES[c.type]]
+      .some(v => String(v || '').toLowerCase().includes(query));
+  });
+
+  host.append(el('div', { class: 'items-head' }, [
+    el('div', { class: 'items-count' }, [
+      el('b', { text: `${stats.total} control${stats.total === 1 ? '' : 's'}` }),
+      el('span', { text: stats.breakdown ? ` — ${stats.breakdown}` : '' }),
+    ]),
+    el('div', { class: 'items-tools' }, [
+      el('input', {
+        type: 'search', placeholder: 'Filter by id, action or sprite…',
+        value: state.ui.itemSearch || '', dataset: { k: 'item-search' },
+        oninput: e => { state.ui.itemSearch = e.target.value; renderInspector(); },
+      }),
+      el('button', {
+        class: 'btn sm issues-toggle' + (onlyIssues ? ' is-on' : '') + (stats.warn ? ' has-warn' : ''),
+        title: stats.warn ? 'Show only the controls with something wrong' : 'Nothing looks wrong',
+        onclick: () => { state.ui.itemIssuesOnly = !onlyIssues; renderInspector(); },
+        html: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l10 19H2z" opacity=".25"/><path d="M11 8h2v7h-2zm0 9h2v2h-2z"/></svg><span>${stats.warn}</span>`,
+      }),
+    ]),
+  ]));
+
+  if (!visible.length) {
+    host.append(el('div', { class: 'pal-empty', text: onlyIssues ? 'Nothing to fix.' : 'Nothing matches that filter.' }));
+    return;
   }
+
+  // Topmost first, matching what you see on the stage.
+  const wrap = el('div', { class: 'items' }, visible.slice().reverse().map(itemRow));
   host.append(wrap);
+
+  if (!onlyIssues && stats.warn) {
+    host.append(el('p', { class: 'hint', style: 'padding:8px 10px 12px',
+      text: `${stats.warn} control${stats.warn === 1 ? ' has' : 's have'} something worth a look — tap the warning chip to see just those.` }));
+  }
 }
 
-function layerRow(c, index) {
+const LEVEL_MARK = { warn: '▲', info: '●' };
+
+function itemRow(item) {
+  const c = item.control;
+  const selected = state.selection.includes(c.id);
+  const worst = item.issues.some(i => i.level === 'warn') ? 'warn'
+    : item.issues.length ? 'info' : null;
+
   const node = el('div', {
-    class: 'layer' + (state.selection.includes(c.id) ? ' is-sel' : ''),
+    class: 'item' + (selected ? ' is-sel' : '') + (worst ? ' has-' + worst : '') + (c.hidden ? ' is-hidden' : ''),
     draggable: true,
-    onclick: e => select(c.id, { additive: e.shiftKey }),
+    onclick: e => clickItem(e, c),
   }, [
-    el('img', { src: imgSrc(spritePath(c.sprite, state.doc.style)), alt: '', loading: 'lazy' }),
-    el('span', { class: 'nm', text: c.action || c.id }),
-    el('button', {
-      class: 'act' + (c.hidden ? ' is-on' : ''), title: c.hidden ? 'Show' : 'Hide',
-      onclick: e => { e.stopPropagation(); edit(() => { c.hidden = !c.hidden; }); },
-      html: c.hidden
-        ? '<svg viewBox="0 0 24 24"><path d="M2 5l17 15 1.3-1.5-3-2.6A11 11 0 0022 12S18.5 5 12 5a10 10 0 00-4 .8L3.3 3.5zM12 7c4.2 0 6.9 3.6 7.7 5a10 10 0 01-2.6 2.9l-2-1.8A3 3 0 0011 9.2L9.5 7.8A8 8 0 0112 7z"/></svg>'
-        : '<svg viewBox="0 0 24 24"><path d="M12 5C5.5 5 2 12 2 12s3.5 7 10 7 10-7 10-7-3.5-7-10-7zm0 2c4.2 0 6.9 3.6 7.7 5-.8 1.4-3.5 5-7.7 5s-6.9-3.6-7.7-5C5.1 10.6 7.8 7 12 7zm0 1.8a3.2 3.2 0 100 6.4 3.2 3.2 0 000-6.4z"/></svg>',
-    }),
-    el('button', {
-      class: 'act' + (c.locked ? ' is-on' : ''), title: c.locked ? 'Unlock' : 'Lock',
-      onclick: e => { e.stopPropagation(); edit(() => { c.locked = !c.locked; }); },
-      html: c.locked
-        ? '<svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 00-5 5v2H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H9V7a3 3 0 013-3z"/></svg>'
-        : '<svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 00-5 5h2a3 3 0 016 0v2H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1V7a5 5 0 00-5-5z" opacity=".75"/></svg>',
-    }),
+    el('div', { class: 'item-thumb' + (styleInfo(state.doc.style).dark ? ' on-dark' : '') }, [
+      el('img', { src: imgSrc(spritePath(c.sprite, state.doc.style)), alt: '', loading: 'lazy' }),
+    ]),
+    el('div', { class: 'item-body' }, [
+      el('div', { class: 'item-top' }, [
+        el('span', { class: 'item-id', text: c.id, title: c.id }),
+        el('button', {
+          class: `badge ${c.type === 'joystick' ? 'joystick' : c.type === 'dpad' ? 'dpad' : 'button'} item-type`,
+          title: `Select every ${TYPE_NAMES[c.type] || c.type}`,
+          onclick: e => { e.stopPropagation(); selectByType(c.type); },
+          text: TYPE_NAMES[c.type] || c.type,
+        }),
+      ]),
+      el('div', { class: 'item-meta', title: `${c.sprite}  ·  anchor ${c.anchor}` }, [
+        el('span', { text: c.action || '—' }),
+        el('span', { class: 'sep', text: '·' }),
+        el('span', { text: `${Math.round(c.x)}, ${Math.round(c.y)}` }),
+        el('span', { class: 'sep', text: '·' }),
+        el('span', { text: `${Math.round(c.w)}×${Math.round(c.h)}` }),
+      ]),
+      ...item.issues.map(i => el('div', { class: `item-issue is-${i.level}` }, [
+        el('span', { class: 'mark', text: LEVEL_MARK[i.level] }),
+        i.text,
+      ])),
+    ]),
+    el('div', { class: 'item-acts' }, [
+      eyeButton(c),
+      lockButton(c),
+    ]),
   ]);
 
+  bindReorder(node, item.index);
+  return node;
+}
+
+/** Plain click selects, ctrl/cmd toggles, shift extends — standard list behaviour. */
+function clickItem(e, c) {
+  const ids = state.doc.controls.map(x => x.id);
+  if (e.shiftKey && rangeAnchor && ids.includes(rangeAnchor)) {
+    const a = ids.indexOf(rangeAnchor);
+    const b = ids.indexOf(c.id);
+    const [lo, hi] = a < b ? [a, b] : [b, a];
+    select(ids.slice(lo, hi + 1));
+    return;
+  }
+  if (e.ctrlKey || e.metaKey) {
+    select(c.id, { additive: true });
+  } else {
+    select(c.id);
+  }
+  rangeAnchor = c.id;
+}
+
+function selectByType(type) {
+  const ids = state.doc.controls.filter(c => c.type === type).map(c => c.id);
+  if (ids.length) select(ids);
+}
+
+function eyeButton(c) {
+  return el('button', {
+    class: 'act' + (c.hidden ? ' is-on' : ''), title: c.hidden ? 'Show' : 'Hide',
+    onclick: e => { e.stopPropagation(); edit(() => { c.hidden = !c.hidden; }); },
+    html: c.hidden
+      ? '<svg viewBox="0 0 24 24"><path d="M2 5l17 15 1.3-1.5-3-2.6A11 11 0 0022 12S18.5 5 12 5a10 10 0 00-4 .8L3.3 3.5zM12 7c4.2 0 6.9 3.6 7.7 5a10 10 0 01-2.6 2.9l-2-1.8A3 3 0 0011 9.2L9.5 7.8A8 8 0 0112 7z"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path d="M12 5C5.5 5 2 12 2 12s3.5 7 10 7 10-7 10-7-3.5-7-10-7zm0 2c4.2 0 6.9 3.6 7.7 5-.8 1.4-3.5 5-7.7 5s-6.9-3.6-7.7-5C5.1 10.6 7.8 7 12 7zm0 1.8a3.2 3.2 0 100 6.4 3.2 3.2 0 000-6.4z"/></svg>',
+  });
+}
+
+function lockButton(c) {
+  return el('button', {
+    class: 'act' + (c.locked ? ' is-on' : ''), title: c.locked ? 'Unlock' : 'Lock',
+    onclick: e => { e.stopPropagation(); edit(() => { c.locked = !c.locked; }); },
+    html: c.locked
+      ? '<svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 00-5 5v2H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H9V7a3 3 0 013-3z"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 00-5 5h2a3 3 0 016 0v2H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1V7a5 5 0 00-5-5z" opacity=".75"/></svg>',
+  });
+}
+
+/** Dragging a row changes draw order. */
+function bindReorder(node, index) {
   node.addEventListener('dragstart', e => {
     e.dataTransfer.setData('text/layer', String(index));
     e.dataTransfer.effectAllowed = 'move';
   });
   node.addEventListener('dragover', e => {
-    if (e.dataTransfer.types.includes('text/layer')) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+    if (e.dataTransfer.types.includes('text/layer')) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      node.classList.add('is-drop');
+    }
   });
+  node.addEventListener('dragleave', () => node.classList.remove('is-drop'));
   node.addEventListener('drop', e => {
+    node.classList.remove('is-drop');
     const from = parseInt(e.dataTransfer.getData('text/layer'), 10);
     if (Number.isNaN(from) || from === index) return;
     e.preventDefault();
@@ -608,7 +729,6 @@ function layerRow(c, index) {
       doc.controls.splice(index, 0, moved);
     }, 'reorder');
   });
-  return node;
 }
 
 /* ═══════════════════════ screen ═══════════════════════ */

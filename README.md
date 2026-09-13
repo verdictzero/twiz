@@ -92,6 +92,27 @@ control on the inset, not the screen edge. There's also an exact-gap field
 readout of the current gaps, so you can see whether a row is even before
 touching anything. Rotated controls are handled by their rotated bounds.
 
+**An items list of everything placed.** The **Items** tab is the inventory: every
+control with its id, action, position, size and sprite, topmost first. Click to
+select, ctrl-click to add, shift-click for a range, or tap a type chip to grab
+every stick or every button at once — which is how you feed a selection to the
+arrange tools above. Filter by id, action or sprite; drag a row to change draw
+order; toggle visibility or lock from the row.
+
+It also checks the layout as you go, because this is the one view that sees
+everything at once:
+
+- a control **off the screen** entirely, and which side it left by
+- a control **outside the safe area** — under a notch or on the home indicator
+- two **touch areas that overlap**, where one thumb could hit both
+- a control with **no action name** (it exports as `null`)
+- the same **action name used twice**
+
+The warning chip in the header counts the affected controls and filters the list
+down to them. Running it over the six shipped examples turned up four real
+problems, including a button placed off the edge of the screen — all now fixed,
+and the test suite checks every example stays clean.
+
 **Test mode** (`P`) runs the layout with real multi-touch. Sticks clamp and apply
 their dead zone, buttons swap to the pressed highlight sprite, and a live readout
 shows exactly the values a game would receive. If it feels wrong here, it will feel
@@ -316,6 +337,7 @@ public/                 the site — this is what GitLab Pages publishes
     assets.js           sprite loading and caching
     devices.js          screen presets
     arrange.js          align and distribute — pure geometry, unit tested
+    inventory.js        the items list: what is placed, and what looks wrong
     zip.js              a small store-only zip writer
     ui.js               DOM helpers
   assets/
@@ -341,7 +363,9 @@ python3 tools/build_assets.py path/to/unzipped-mobile-controls
 `tools/smoke-test.mjs` drives the real app in a headless browser and checks the
 parts that break quietly — stick clamping and dead zones, exporting a layout the
 canvas has not drawn yet, anchors surviving a device change, align and distribute
-against all three frames, and a JSON round trip across all six presets.
+against all three frames, the layout checks behind the items list, and a JSON
+round trip across all six presets. It also asserts that every shipped example
+passes its own layout checks.
 
 ```sh
 python3 -m http.server 8899 --directory public &

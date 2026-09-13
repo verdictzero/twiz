@@ -234,6 +234,62 @@ check('align right honours the safe-area inset', arrange.alignSafe);
 check('two controls cannot distribute within the selection', arrange.twoIsNoop);
 check('gap summaries read as words, not negative numbers', arrange.wording);
 
+/* ── the items list and its checks ─────────────────────────────────── */
+
+const inventory = await page.evaluate(async () => {
+  const { makeDoc, makeControl } = await import('./js/model.js');
+  const { analyse, summarize, hitOverlap } = await import('./js/inventory.js');
+  const { EXAMPLES, buildExample } = await import('./js/examples.js');
+
+  const btn = (id, x, y, w, over = {}) => {
+    const c = makeControl('button_circle', { x, y });
+    Object.assign(c, { id, action: id, w, h: w }, over);
+    return c;
+  };
+  const doc = (controls, safe = { top: 0, right: 0, bottom: 0, left: 0 }) => {
+    const d = makeDoc();
+    d.reference = { ...d.reference, width: 1000, height: 500 };
+    d.safeArea = safe;
+    d.controls = controls;
+    return d;
+  };
+  const codes = items => items.flatMap(i => i.issues.map(s => s.code));
+
+  return {
+    offscreen: codes(analyse(doc([btn('in', 500, 250, 80), btn('out', 990, 250, 80)]))).includes('offscreen'),
+    unsafe: codes(analyse(doc([btn('notch', 70, 250, 80)], { top: 0, right: 60, bottom: 0, left: 60 }))).includes('unsafe'),
+    overlap: codes(analyse(doc([btn('a', 300, 250, 100), btn('b', 350, 250, 100)]))).includes('overlap'),
+    hiddenIgnored: !codes(analyse(doc([btn('a', 300, 250, 100), btn('b', 350, 250, 100, { hidden: true })]))).includes('overlap'),
+    noAction: codes(analyse(doc([btn('x', 500, 250, 60, { action: '' })]))).includes('noaction'),
+    dupAction: codes(analyse(doc([btn('a', 200, 250, 60, { action: 'fire' }), btn('b', 700, 250, 60, { action: 'fire' })]))).includes('dupaction'),
+    clean: analyse(doc([btn('solo', 500, 250, 60)])).every(i => i.issues.length === 0),
+    rotatedHit: hitOverlap(
+      btn('r', 100, 100, 120, { h: 40, rotation: 90 }),
+      btn('n', 100, 160, 40)),
+    summary: summarize(analyse(doc([btn('a', 200, 250, 60), btn('b', 700, 250, 60)]))).breakdown,
+    // Every shipped example should pass its own checks.
+    examples: EXAMPLES.map(ex => {
+      const d = buildExample(ex.id);
+      return { name: ex.name, problems: analyse(d).flatMap(i => i.issues.map(s => `${i.control.id}: ${s.text}`)) };
+    }),
+  };
+});
+
+check('a control past the screen edge is flagged', inventory.offscreen);
+check('a control under the safe-area inset is flagged', inventory.unsafe);
+check('two touch areas that overlap are flagged', inventory.overlap);
+check('a hidden control raises no overlap', inventory.hiddenIgnored);
+check('a control with no action is noted', inventory.noAction);
+check('an action used twice is flagged', inventory.dupAction);
+check('a well-placed control is clean', inventory.clean);
+check('rotation is taken into account for touch areas', inventory.rotatedHit);
+check('the list summarises by type', /button/.test(inventory.summary), inventory.summary);
+
+for (const ex of inventory.examples) {
+  check(`example "${ex.name}" has no layout problems`, ex.problems.length === 0,
+    ex.problems.slice(0, 3).join(' | '));
+}
+
 /* ── no console noise ──────────────────────────────────────────────── */
 
 check('no console errors', consoleErrors.length === 0, consoleErrors.join(' | '));

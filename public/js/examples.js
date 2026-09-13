@@ -46,20 +46,20 @@ function platformer() {
   const { doc, ref } = base('Platformer', 'iphone-15', 'landscape', 'a');
   doc.controls = [
     ctl('joystick_circle_pad_a', ref, {
-      id: 'move', type: 'joystick', x: 150, y: 300, size: 168, hitScale: 1.15,
+      id: 'move', type: 'joystick', x: 150, y: 280, size: 168, hitScale: 1.15,
       stick: { travel: 0.42, deadZone: 0.18, axisX: 'move_x', axisY: 'move_y' },
     }),
     ctl('button_circle', ref, {
-      id: 'jump', x: 760, y: 320, size: 104, icon: 'icon_jump', iconScale: 0.5, hitScale: 1.2,
+      id: 'jump', x: 735, y: 300, size: 104, icon: 'icon_jump', iconScale: 0.5, hitScale: 1.2,
     }),
     ctl('button_circle', ref, {
-      id: 'attack', x: 650, y: 250, size: 92, icon: 'icon_sword', iconScale: 0.5, hitScale: 1.2,
+      id: 'attack', x: 615, y: 255, size: 92, icon: 'icon_sword', iconScale: 0.5, hitScale: 1.2,
     }),
     ctl('button_circle', ref, {
-      id: 'dash', x: 752, y: 196, size: 76, icon: 'icon_arrow', iconScale: 0.5, hitScale: 1.2, opacity: 0.92,
+      id: 'dash', x: 735, y: 185, size: 76, icon: 'icon_arrow', iconScale: 0.5, hitScale: 1.2, opacity: 0.92,
     }),
     ctl('button_square', ref, {
-      id: 'pause', x: 800, y: 46, size: 56, icon: 'icon_pause', iconScale: 0.45, opacity: 0.8,
+      id: 'pause', x: 762, y: 40, size: 56, icon: 'icon_pause', iconScale: 0.45, opacity: 0.8,
     }),
   ];
   return doc;
@@ -96,16 +96,16 @@ function racer() {
   const { doc, ref } = base('Racer', 'pixel-8', 'landscape', 'f');
   doc.controls = [
     ctl('direction_left', ref, {
-      id: 'steer_left', action: 'steer_left', x: 92, y: 330, size: 116, hitScale: 1.3,
+      id: 'steer_left', action: 'steer_left', x: 120, y: 320, size: 116, hitScale: 1.3,
     }),
     ctl('direction_right', ref, {
-      id: 'steer_right', action: 'steer_right', x: 232, y: 330, size: 116, hitScale: 1.3,
+      id: 'steer_right', action: 'steer_right', x: 280, y: 320, size: 116, hitScale: 1.3,
     }),
     ctl('button_circle', ref, {
-      id: 'accelerate', x: 800, y: 330, size: 124, icon: 'icon_pedal', iconScale: 0.5, hitScale: 1.2,
+      id: 'accelerate', x: 778, y: 320, size: 124, icon: 'icon_pedal', iconScale: 0.5, hitScale: 1.2,
     }),
     ctl('button_circle', ref, {
-      id: 'brake', x: 668, y: 300, size: 96, icon: 'icon_pedal_brake', iconScale: 0.5, hitScale: 1.2,
+      id: 'brake', x: 630, y: 250, size: 96, icon: 'icon_pedal_brake', iconScale: 0.5, hitScale: 1.2,
     }),
     ctl('button_bean', ref, {
       id: 'handbrake', x: 760, y: 180, size: 104, icon: 'icon_arrow_rotate', iconScale: 0.42,
@@ -119,30 +119,31 @@ function racer() {
 
 function portraitRpg() {
   const { doc, ref } = base('Portrait RPG', 'iphone-15', 'portrait', 'g');
-  const cx = 300;
-  const cy = 640;
+  // 393 points across is tight, and a hexagon is taller than it is wide — so its
+  // touch area is a rectangle, not a circle, and needs more room than it looks.
+  // The skills stack up the right edge rather than ringing the attack button.
   doc.controls = [
     ctl('joystick_hexagon_pad_b', ref, {
-      id: 'move', type: 'joystick', x: 110, y: 700, size: 170, hitScale: 1.15,
+      id: 'move', type: 'joystick', x: 92, y: 740, size: 144, hitScale: 1.15,
       stick: { travel: 0.44, deadZone: 0.18, mode: 'floating', axisX: 'move_x', axisY: 'move_y' },
     }),
     ctl('button_hexagon', ref, {
-      id: 'attack', x: cx, y: cy + 60, size: 104, icon: 'icon_sword', iconScale: 0.5, hitScale: 1.15,
+      id: 'attack', x: 300, y: 748, size: 96, icon: 'icon_sword', iconScale: 0.5, hitScale: 1.15,
     }),
     ctl('button_hexagon', ref, {
-      id: 'skill_1', x: cx - 92, y: cy - 10, size: 80, icon: 'icon_fire', iconScale: 0.5, hitScale: 1.15,
+      id: 'skill_1', x: 300, y: 618, size: 72, icon: 'icon_fire', iconScale: 0.5, hitScale: 1.15,
     }),
     ctl('button_hexagon', ref, {
-      id: 'skill_2', x: cx - 40, y: cy - 96, size: 80, icon: 'icon_star', iconScale: 0.5, hitScale: 1.15,
+      id: 'skill_2', x: 196, y: 540, size: 72, icon: 'icon_star', iconScale: 0.5, hitScale: 1.15,
     }),
     ctl('button_hexagon', ref, {
-      id: 'potion', x: cx + 58, y: cy - 82, size: 72, icon: 'icon_shield', iconScale: 0.5, hitScale: 1.15,
+      id: 'potion', x: 300, y: 500, size: 68, icon: 'icon_shield', iconScale: 0.5, hitScale: 1.15,
     }),
     ctl('button_square', ref, {
-      id: 'menu', x: 330, y: 60, size: 56, icon: 'icon_menu', iconScale: 0.45, opacity: 0.85,
+      id: 'menu', x: 330, y: 100, size: 56, icon: 'icon_menu', iconScale: 0.45, opacity: 0.85,
     }),
     ctl('button_square', ref, {
-      id: 'bag', x: 264, y: 60, size: 56, icon: 'icon_key', iconScale: 0.45, opacity: 0.85,
+      id: 'bag', x: 264, y: 100, size: 56, icon: 'icon_key', iconScale: 0.45, opacity: 0.85,
     }),
   ];
   return doc;
@@ -162,10 +163,10 @@ function dpadRetro() {
       id: 'button_b', action: 'cancel', x: 700, y: 268, size: 88, icon: 'icon_button_b', iconScale: 0.45, hitScale: 1.2,
     }),
     ctl('button_square_wide', ref, {
-      id: 'start', x: 512, y: 372, size: 104, icon: 'icon_play', iconScale: 0.34, opacity: 0.9,
+      id: 'start', x: 512, y: 358, size: 104, icon: 'icon_play', iconScale: 0.34, opacity: 0.9,
     }),
     ctl('button_square_wide', ref, {
-      id: 'select', x: 392, y: 372, size: 104, icon: 'icon_menu', iconScale: 0.34, opacity: 0.9,
+      id: 'select', x: 392, y: 358, size: 104, icon: 'icon_menu', iconScale: 0.34, opacity: 0.9,
     }),
   ];
   return doc;

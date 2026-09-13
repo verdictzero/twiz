@@ -3,7 +3,7 @@
   "version": 1,
   "generator": "Touch Layout Studio",
   "name": "Racer",
-  "exported": "2026-09-13T16:21:08.278Z",
+  "exported": "2026-09-13T18:27:21.674Z",
   "pack": {
     "name": "Kenney Mobile Controls 1.0",
     "license": "CC0 1.0 Universal",
@@ -47,22 +47,22 @@
       "action": "steer_left",
       "anchor": "bottom-left",
       "anchorOffset": {
-        "x": 92,
-        "y": -82
+        "x": 120,
+        "y": -92
       },
       "center": {
-        "x": 92,
-        "y": 330
+        "x": 120,
+        "y": 320
       },
       "rect": {
-        "x": 34,
-        "y": 272,
+        "x": 62,
+        "y": 262,
         "width": 116,
         "height": 116
       },
       "normalized": {
-        "x": 0.1031,
-        "y": 0.801
+        "x": 0.1345,
+        "y": 0.7767
       },
       "rotation": 0,
       "opacity": 1,
@@ -86,22 +86,22 @@
       "action": "steer_right",
       "anchor": "bottom-left",
       "anchorOffset": {
-        "x": 232,
-        "y": -82
+        "x": 280,
+        "y": -92
       },
       "center": {
-        "x": 232,
-        "y": 330
+        "x": 280,
+        "y": 320
       },
       "rect": {
-        "x": 174,
-        "y": 272,
+        "x": 222,
+        "y": 262,
         "width": 116,
         "height": 116
       },
       "normalized": {
-        "x": 0.2601,
-        "y": 0.801
+        "x": 0.3139,
+        "y": 0.7767
       },
       "rotation": 0,
       "opacity": 1,
@@ -125,22 +125,22 @@
       "action": "accelerate",
       "anchor": "bottom-right",
       "anchorOffset": {
-        "x": -92,
-        "y": -82
+        "x": -114,
+        "y": -92
       },
       "center": {
-        "x": 800,
-        "y": 330
+        "x": 778,
+        "y": 320
       },
       "rect": {
-        "x": 738,
-        "y": 268,
+        "x": 716,
+        "y": 258,
         "width": 124,
         "height": 124
       },
       "normalized": {
-        "x": 0.8969,
-        "y": 0.801
+        "x": 0.8722,
+        "y": 0.7767
       },
       "rotation": 0,
       "opacity": 1,
@@ -175,24 +175,24 @@
       "type": "button",
       "kind": "Button",
       "action": "brake",
-      "anchor": "bottom-right",
+      "anchor": "center-right",
       "anchorOffset": {
-        "x": -224,
-        "y": -112
+        "x": -262,
+        "y": 44
       },
       "center": {
-        "x": 668,
-        "y": 300
+        "x": 630,
+        "y": 250
       },
       "rect": {
-        "x": 620,
-        "y": 252,
+        "x": 582,
+        "y": 202,
         "width": 96,
         "height": 96
       },
       "normalized": {
-        "x": 0.7489,
-        "y": 0.7282
+        "x": 0.7063,
+        "y": 0.6068
       },
       "rotation": 0,
       "opacity": 1,
